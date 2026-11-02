@@ -35,12 +35,13 @@ fn create_sampler(
         address_mode_w: wgpu::AddressMode::Repeat,
         mag_filter: filter,
         min_filter: filter,
-        mipmap_filter: match filter {
-            wgpu::FilterMode::Linear => wgpu::MipmapFilterMode::Linear,
-            wgpu::FilterMode::Nearest => wgpu::MipmapFilterMode::Nearest,
-        },
+        // Bitmaps have a single mip level. Keep the level of detail at 0, so that
+        // shrunk bitmaps are filtered exactly like enlarged ones. A mipmap filter
+        // and an open LOD range are not needed for that, and some WebGL drivers
+        // sample shrunk parts of such textures incorrectly (seen in perspective).
+        mipmap_filter: wgpu::MipmapFilterMode::Nearest,
         lod_min_clamp: 0.0,
-        lod_max_clamp: 100.0,
+        lod_max_clamp: 0.0,
         compare: None,
         anisotropy_clamp: 1,
         border_color: None,
