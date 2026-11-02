@@ -1,0 +1,6 @@
+TextElement eventMirror set: true
+TextElement textRotation: rotate90
+GroupElement eventMirror set: true
+GroupElement textRotation: rotate180
+default eventMirror: null
+default textRotation: rotate0
