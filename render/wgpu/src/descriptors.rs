@@ -165,7 +165,7 @@ impl Quad {
     pub fn new(device: &wgpu::Device) -> Self {
         let mut vertex_buffer = BufferBuilder::new(&device.limits(), 0);
         let vertices_pos = vertex_buffer
-            .add(&[
+            .add_vertices(&[
                 PosVertex {
                     position: [0.0, 0.0],
                 },
@@ -181,7 +181,7 @@ impl Quad {
             ])
             .expect("Quad vertices must fit");
         let vertices_pos_uv = vertex_buffer
-            .add(&[
+            .add_vertices(&[
                 PosUvVertex {
                     position: [0.0, 0.0],
                     uv: [0.0, 0.0, 1.0],
@@ -201,7 +201,7 @@ impl Quad {
             ])
             .expect("Quad vertices must fit");
         let vertices_pos_color = vertex_buffer
-            .add(&[
+            .add_vertices(&[
                 PosColorVertex {
                     position: [0.0, 0.0],
                     color: [1.0, 1.0, 1.0, 1.0],
@@ -221,7 +221,7 @@ impl Quad {
             ])
             .expect("Quad vertices must fit");
         let filter_vertices = vertex_buffer
-            .add(&[
+            .add_vertices(&[
                 FilterVertex {
                     position: [0.0, 0.0],
                     uv: [0.0, 0.0],

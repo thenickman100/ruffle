@@ -82,7 +82,7 @@ impl PendingDraw {
                     .map(PosColorVertex::from)
                     .collect();
                 vertex_buffer
-                    .add(&vertices)
+                    .add_vertices(&vertices)
                     .expect("Mesh vertex buffer was too large!")
             }
             TessDrawType::Gradient { matrix, .. } => {
@@ -92,7 +92,7 @@ impl PendingDraw {
                     .map(|v| PosUvVertex::from_tessellator(v, matrix))
                     .collect();
                 vertex_buffer
-                    .add(&vertices)
+                    .add_vertices(&vertices)
                     .expect("Mesh vertex buffer was too large!")
             }
             TessDrawType::Bitmap(bitmap) => {
@@ -102,7 +102,7 @@ impl PendingDraw {
                     .map(|v| PosUvVertex::from_tessellator(v, &bitmap.matrix))
                     .collect();
                 vertex_buffer
-                    .add(&vertices)
+                    .add_vertices(&vertices)
                     .expect("Mesh vertex buffer was too large!")
             }
         };
