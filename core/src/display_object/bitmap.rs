@@ -398,11 +398,13 @@ impl<'gc> TDisplayObject<'gc> for Bitmap<'gc> {
             return;
         }
 
-        self.0.bitmap_data.get().render(
-            self.0.smoothing.get(),
-            context,
-            self.0.pixel_snapping.get(),
-        );
+        // Flash always smooths bitmaps drawn with a 3D transform.
+        let smoothing =
+            self.0.smoothing.get() || context.transform_stack.transform().matrix3d.is_some();
+        self.0
+            .bitmap_data
+            .get()
+            .render(smoothing, context, self.0.pixel_snapping.get());
     }
 
     fn object1(self) -> Option<crate::avm1::Object<'gc>> {

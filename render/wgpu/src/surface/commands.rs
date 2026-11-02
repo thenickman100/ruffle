@@ -249,7 +249,7 @@ impl CommandHandler for WgpuCommandHandler<'_, '_> {
             BlendType::Trivial(blend_mode) => {
                 let transform = Transform {
                     matrix: Matrix::scale(target.width() as f32, target.height() as f32),
-                    tz: 0.0,
+                    matrix3d: None,
                     color_transform: Default::default(),
                     perspective_projection: None,
                 };
@@ -323,7 +323,7 @@ impl CommandHandler for WgpuCommandHandler<'_, '_> {
         let texture = as_texture(&bitmap);
 
         pixel_snapping.apply(&mut transform.matrix);
-        transform.matrix *= Matrix::scale(region.width() as f32, region.height() as f32);
+        transform.scale_local(region.width() as f32, region.height() as f32);
 
         let binds = texture.bind_group(
             false,
@@ -385,7 +385,7 @@ impl CommandHandler for WgpuCommandHandler<'_, '_> {
     fn render_stage3d(&mut self, bitmap: BitmapHandle, mut transform: Transform) {
         {
             let texture = as_texture(&bitmap);
-            transform.matrix *= Matrix::scale(
+            transform.scale_local(
                 texture.texture.width() as f32,
                 texture.texture.height() as f32,
             );
@@ -472,7 +472,7 @@ impl CommandHandler for WgpuCommandHandler<'_, '_> {
         self.add_to_current(
             &Transform {
                 matrix,
-                tz: 0.0,
+                matrix3d: None,
                 color_transform: ColorTransform::multiply_from(color),
                 perspective_projection: None,
             },
@@ -493,7 +493,7 @@ impl CommandHandler for WgpuCommandHandler<'_, '_> {
             self.add_to_current(
                 &Transform {
                     matrix,
-                    tz: 0.0,
+                    matrix3d: None,
                     color_transform: ColorTransform::multiply_from(color),
                     perspective_projection: None,
                 },
@@ -515,7 +515,7 @@ impl CommandHandler for WgpuCommandHandler<'_, '_> {
             self.add_to_current(
                 &Transform {
                     matrix,
-                    tz: 0.0,
+                    matrix3d: None,
                     color_transform: ColorTransform::multiply_from(color),
                     perspective_projection: None,
                 },
@@ -615,7 +615,7 @@ impl CommandHandler for WgpuCommandHandler<'_, '_> {
         self.add_to_current(
             &Transform {
                 matrix,
-                tz: 0.0,
+                matrix3d: None,
                 color_transform: Default::default(),
                 perspective_projection: None,
             },

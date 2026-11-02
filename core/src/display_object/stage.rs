@@ -26,6 +26,7 @@ use ruffle_common::utils::HasPrefixField;
 use ruffle_macros::istr;
 use ruffle_render::backend::ViewportDimensions;
 use ruffle_render::commands::CommandHandler;
+use ruffle_render::matrix3d::Matrix3D;
 use ruffle_render::perspective_projection::PerspectiveProjection;
 use ruffle_render::quality::StageQuality;
 use ruffle_render::transform::Transform;
@@ -621,12 +622,16 @@ impl<'gc> Stage<'gc> {
     /// You can easily observe the difference between render_viewport and render
     /// in FP by checking which stuff can be rendered using `BitmapData.draw`.
     pub fn render_viewport(self, context: &mut RenderContext<'_, 'gc>) {
+        let viewport_matrix = self.0.viewport_matrix.get();
+        context
+            .transform_stack
+            .set_projection(Some(self.perspective_projection_matrix(&viewport_matrix)));
         context.transform_stack.push(&Transform {
-            matrix: self.0.viewport_matrix.get(),
+            matrix: viewport_matrix,
+            matrix3d: None,
             color_transform: Default::default(),
             // TODO: Verify perspective_projection when its rendering is implemented.
             perspective_projection: self.as_displayobject().base().perspective_projection(),
-            tz: 0.0,
         });
 
         // All of our Stage3D instances get rendered *underneath* the main stage.
@@ -650,6 +655,29 @@ impl<'gc> Stage<'gc> {
         }
 
         context.transform_stack.pop();
+    }
+
+    /// The perspective projection of 3D display objects, in viewport pixels.
+    ///
+    /// Flash projects 3D objects in stage coordinates, using the perspective
+    /// projection of the root (by default, a field of view of 55 degrees centered on
+    /// the stage), before the stage itself is scaled into the viewport.
+    pub fn perspective_projection_matrix(self, viewport_matrix: &Matrix) -> Matrix3D {
+        let (movie_width, movie_height) = self.movie_size();
+        let projection = self
+            .root_clip()
+            .and_then(|root| root.base().perspective_projection())
+            .unwrap_or(PerspectiveProjection {
+                field_of_view: 55.0,
+                center: (movie_width as f64 / 2.0, movie_height as f64 / 2.0),
+            });
+        let focal_length = projection.focal_length(movie_width as f32) as f64;
+        let center = *viewport_matrix
+            * Point::new(
+                Twips::from_pixels(projection.center.0),
+                Twips::from_pixels(projection.center.1),
+            );
+        Matrix3D::perspective(center.x.to_pixels(), center.y.to_pixels(), focal_length)
     }
 
     /// Draw the stage's letterbox.

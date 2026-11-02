@@ -119,7 +119,7 @@ impl<'gc> EventObject<'gc> {
         bubbles: bool,
         button: MouseButton,
     ) -> EventObject<'gc> {
-        let local = target.local_mouse_position(activation.context);
+        let (local_x, local_y) = target.local_mouse_position_pixels(activation.context);
 
         let mouse_event_cls = activation.avm2().classes().mouseevent;
         Self::from_class_and_args(
@@ -132,9 +132,9 @@ impl<'gc> EventObject<'gc> {
                 // cancellable
                 false.into(),
                 // localX
-                local.x.to_pixels().into(),
+                local_x.into(),
                 // localY
-                local.y.to_pixels().into(),
+                local_y.into(),
                 // relatedObject
                 related_object
                     .map(|o| o.as_displayobject().object2_or_null())

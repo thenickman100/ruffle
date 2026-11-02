@@ -2866,7 +2866,7 @@ impl<'gc> TDisplayObject<'gc> for MovieClip<'gc> {
         }
 
         if self.world_bounds(BoundsMode::Engine).contains(point) {
-            let Some(local_matrix) = self.global_to_local_matrix() else {
+            let Some((local_point, local_matrix)) = self.global_to_local_for_hit_test(point) else {
                 return false;
             };
             if let Some(masker) = self.masker()
@@ -2897,9 +2897,8 @@ impl<'gc> TDisplayObject<'gc> for MovieClip<'gc> {
                 }
             }
 
-            let point = local_matrix * point;
             if let Some(drawing) = self.drawing()
-                && drawing.hit_test(point, &local_matrix)
+                && drawing.hit_test(local_point, &local_matrix)
             {
                 return true;
             }
@@ -3232,7 +3231,7 @@ impl<'gc> TInteractiveObject<'gc> for MovieClip<'gc> {
                 }
             }
 
-            let local_matrix = self.global_to_local_matrix()?;
+            let (local_point, local_matrix) = self.global_to_local_for_hit_test(point)?;
 
             // Maybe we could skip recursing down at all if !world_bounds.contains(point),
             // but a child button can have an invisible hit area outside the parent's bounds.
@@ -3286,7 +3285,7 @@ impl<'gc> TInteractiveObject<'gc> for MovieClip<'gc> {
             if self.mouse_enabled()
                 && check_non_interactive
                 && let Some(drawing) = self.drawing()
-                && drawing.hit_test(local_matrix * point, &local_matrix)
+                && drawing.hit_test(local_point, &local_matrix)
             {
                 return Some(this);
             }
@@ -3308,7 +3307,7 @@ impl<'gc> TInteractiveObject<'gc> for MovieClip<'gc> {
 
         if self.visible() {
             let this: InteractiveObject<'gc> = self.into();
-            let Some(local_matrix) = self.global_to_local_matrix() else {
+            let Some((local_point, local_matrix)) = self.global_to_local_for_hit_test(point) else {
                 return Avm2MousePick::Miss;
             };
 
@@ -3433,7 +3432,7 @@ impl<'gc> TInteractiveObject<'gc> for MovieClip<'gc> {
             // Check drawing, because this selects the current clip, it must have mouse enabled
             if self.world_bounds(BoundsMode::Engine).contains(point)
                 && let Some(drawing) = self.drawing()
-                && drawing.hit_test(local_matrix * point, &local_matrix)
+                && drawing.hit_test(local_point, &local_matrix)
             {
                 return if self.mouse_enabled() {
                     Avm2MousePick::Hit(self.into())
