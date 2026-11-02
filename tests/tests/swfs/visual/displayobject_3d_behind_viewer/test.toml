@@ -1,0 +1,23 @@
+# Walls turned nearly side-on, long enough to reach behind the viewer.
+# Expected image taken with Flash Player 32 (standalone debugger).
+# The parts behind the viewer must be clipped away cleanly; some GPU drivers
+# drew stray triangles when the near clip plane was at the viewer itself.
+num_ticks = 1
+
+[[image_comparisons.output.checks]]
+tolerance = 128
+max_outliers = 2500
+
+[[image_comparisons.output.checks]]
+tolerance = 50
+max_outliers = 20000
+
+[player_options]
+with_renderer = { optional = false, quality = "high" }
+
+[[compilers]]
+type = "Asc"
+target = "test.swf"
+class = "Test"
+scripts = ["Test.as"]
+swf_version = 15

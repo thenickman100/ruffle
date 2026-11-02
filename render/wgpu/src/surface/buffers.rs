@@ -191,7 +191,7 @@ impl ChunkBufferBuilder {
     }
 
     pub fn add_transform(&mut self, transform: &Transform) -> Result<u32, BufferFull> {
-        let world_matrix = match &transform.matrix3d {
+        let mut world_matrix: [[f32; 4]; 4] = match &transform.matrix3d {
             // Already includes the perspective projection, in viewport pixels.
             Some(matrix3d) => bytemuck::cast(matrix3d.raw_data),
             None => [
@@ -206,6 +206,13 @@ impl ChunkBufferBuilder {
                 ],
             ],
         };
+        // Depth is not used for sorting, so the z output of the world matrix carries
+        // a constant 1, which the global matrix uses to place the near clip plane
+        // (see `Globals::new`).
+        world_matrix[0][2] = 0.0;
+        world_matrix[1][2] = 0.0;
+        world_matrix[2][2] = 0.0;
+        world_matrix[3][2] = 1.0;
         let instance = Transforms {
             world_matrix,
             mult_color: transform.color_transform.mult_rgba_normalized(),
