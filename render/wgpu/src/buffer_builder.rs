@@ -30,6 +30,34 @@ impl BufferBuilder {
         self.limit = limit;
     }
 
+    /// Adds vertices, starting them at a multiple of the vertex size.
+    ///
+    /// Draws bind their vertices at the returned offset. When vertices of different
+    /// sizes share a buffer (for example the color and bitmap fills of one shape), an
+    /// offset that is not a whole number of vertices is valid, but some WebGL
+    /// implementations (seen with ANGLE on Direct3D 11) then lose the last vertex,
+    /// dropping a triangle from the draw.
+    pub fn add_vertices<T: NoUninit + AnyBitPattern>(
+        &mut self,
+        value: &[T],
+    ) -> Result<Range<wgpu::BufferAddress>, BufferFull> {
+        self.add_vertex_bytes(bytemuck::cast_slice(value), size_of::<T>())
+    }
+
+    /// Like [`Self::add_vertices`], for vertices already encoded as bytes.
+    pub fn add_vertex_bytes(
+        &mut self,
+        bytes: &[u8],
+        stride: usize,
+    ) -> Result<Range<wgpu::BufferAddress>, BufferFull> {
+        let start_pos = self.inner.len().div_ceil(stride) * stride;
+        if (start_pos + bytes.len()) as u64 > self.limit {
+            return Err(BufferFull);
+        }
+        self.inner.resize(start_pos, 0);
+        self.add(bytes)
+    }
+
     pub fn add<T: NoUninit + AnyBitPattern>(
         &mut self,
         value: &[T],

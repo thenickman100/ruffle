@@ -125,7 +125,7 @@ impl ChunkBufferBuilder {
 
         // It's extremely likely that every chunk will have a quad, so let's prime those eagerly and save some complexity later
         let quad_pos_uv_vertices = vertices
-            .add(&[
+            .add_vertices(&[
                 PosUvVertex {
                     position: [0.0, 0.0],
                     uv: [0.0, 0.0, 1.0],
@@ -145,7 +145,7 @@ impl ChunkBufferBuilder {
             ])
             .expect("Buffer was just created, quad vertices should fit");
         let quad_pos_vertices = vertices
-            .add(&[
+            .add_vertices(&[
                 PosVertex {
                     position: [0.0, 0.0],
                 },
@@ -161,7 +161,7 @@ impl ChunkBufferBuilder {
             ])
             .expect("Buffer was just created, quad vertices should fit");
         let quad_pos_color_vertices = vertices
-            .add(&[
+            .add_vertices(&[
                 PosColorVertex {
                     position: [0.0, 0.0],
                     color: [1.0, 1.0, 1.0, 1.0],
@@ -223,7 +223,7 @@ impl ChunkBufferBuilder {
                 index_buffer: quad.index_buffer.clone(),
                 vertices: self
                     .vertices
-                    .add(vertex_bytes)
+                    .add_vertex_bytes(vertex_bytes, size_of::<PosUvVertex>())
                     .map_err(|_| (BufferFull, vertices))?,
                 indices: quad.indices_quad.clone(),
                 instances,
