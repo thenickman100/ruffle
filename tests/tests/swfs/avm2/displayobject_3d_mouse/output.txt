@@ -1,0 +1,9 @@
+down stage=(351,198) target=item local=(49.5,49.5) wall.mouse=(199.45,99.55) item.mouse=(49.45,49.55) wall2.mouse=(-96.65,-100) hitItem=true hitWall=true
+down stage=(322,160) target=item local=(9.6,10.3) wall.mouse=(159.6,60.25) item.mouse=(9.6,10.25) wall2.mouse=(-118.9,-161.3) hitItem=true hitWall=true
+down stage=(383,240) target=item local=(90.5,90) wall.mouse=(240.45,140) item.mouse=(90.45,90) wall2.mouse=(-67.7,-20) hitItem=true hitWall=true
+down stage=(251,203) target=wall local=(49.3,99.7) wall.mouse=(49.3,99.7) item.mouse=(-100.7,49.7) wall2.mouse=(-193.4,-91.2) hitItem=false hitWall=true
+down stage=(425,296) target=wall local=(290,189.7) wall.mouse=(290.05,189.7) item.mouse=(140.05,139.7) wall2.mouse=(-20.15,113.65) hitItem=false hitWall=true
+down stage=(443,194) target=null local=(443,194) wall.mouse=(309.95,99.95) item.mouse=(159.95,49.95) wall2.mouse=(-9.4,-106.9) hitItem=false hitWall=false
+down stage=(530,281) target=wall2 local=(99.3,74.2) wall.mouse=(396.55,172.75) item.mouse=(246.55,122.75) wall2.mouse=(99.35,74.2) hitItem=false hitWall=false
+down stage=(457,305) target=wall2 local=(19.6,138.8) wall.mouse=(324.95,195.8) item.mouse=(174.95,145.8) wall2.mouse=(19.65,138.8) hitItem=false hitWall=false
+down stage=(520,312) target=null local=(520,312) wall.mouse=(387.35,198.05) item.mouse=(237.35,148.05) wall2.mouse=(99.35,159.2) hitItem=false hitWall=false

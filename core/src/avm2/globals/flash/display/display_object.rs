@@ -6,8 +6,7 @@ use crate::avm2::error::{make_error_2005, make_error_2007, make_error_2008, make
 use crate::avm2::filters::FilterAvm2Ext;
 use crate::avm2::function::FunctionArgs;
 use crate::avm2::globals::flash::geom::transform::color_transform_from_transform_object;
-use crate::avm2::globals::flash::geom::transform::has_matrix3d_from_transform_object;
-use crate::avm2::globals::flash::geom::transform::matrix_from_transform_object;
+use crate::avm2::globals::flash::geom::transform::transform_display_object;
 use crate::avm2::globals::slots::flash_display_shader as shader_slots;
 use crate::avm2::globals::slots::flash_geom_point as point_slots;
 use crate::avm2::globals::slots::flash_geom_rectangle as rectangle_slots;
@@ -386,54 +385,67 @@ pub fn get_z<'gc>(
 }
 
 pub fn set_z<'gc>(
-    activation: &mut Activation<'_, 'gc>,
+    _activation: &mut Activation<'_, 'gc>,
     this: Value<'gc>,
     args: FunctionArgs<'_, 'gc>,
 ) -> Result<Value<'gc>, Error<'gc>> {
-    avm2_stub_setter!(activation, "flash.display.DisplayObject", "z");
     let this = this.as_object().unwrap();
 
     if let Some(dobj) = this.as_display_object() {
-        let z = args.get_f64(0);
-        dobj.set_z(z);
-        dobj.base().set_has_matrix3d_stub(true);
+        dobj.set_z(args.get_f64(0));
     }
     Ok(Value::Undefined)
 }
 
 pub fn get_rotation_x<'gc>(
-    activation: &mut Activation<'_, 'gc>,
-    _this: Value<'gc>,
+    _activation: &mut Activation<'_, 'gc>,
+    this: Value<'gc>,
     _args: FunctionArgs<'_, 'gc>,
 ) -> Result<Value<'gc>, Error<'gc>> {
-    avm2_stub_getter!(activation, "flash.display.DisplayObject", "rotationX");
-    Ok(0.into())
+    let this = this.as_object().unwrap();
+
+    if let Some(dobj) = this.as_display_object() {
+        return Ok(dobj.rotation_x().into());
+    }
+    Ok(Value::Undefined)
 }
 
 pub fn set_rotation_x<'gc>(
-    activation: &mut Activation<'_, 'gc>,
-    _this: Value<'gc>,
-    _args: FunctionArgs<'_, 'gc>,
+    _activation: &mut Activation<'_, 'gc>,
+    this: Value<'gc>,
+    args: FunctionArgs<'_, 'gc>,
 ) -> Result<Value<'gc>, Error<'gc>> {
-    avm2_stub_setter!(activation, "flash.display.DisplayObject", "rotationX");
+    let this = this.as_object().unwrap();
+
+    if let Some(dobj) = this.as_display_object() {
+        dobj.set_rotation_x(args.get_f64(0));
+    }
     Ok(Value::Undefined)
 }
 
 pub fn get_rotation_y<'gc>(
-    activation: &mut Activation<'_, 'gc>,
-    _this: Value<'gc>,
+    _activation: &mut Activation<'_, 'gc>,
+    this: Value<'gc>,
     _args: FunctionArgs<'_, 'gc>,
 ) -> Result<Value<'gc>, Error<'gc>> {
-    avm2_stub_getter!(activation, "flash.display.DisplayObject", "rotationY");
-    Ok(0.into())
+    let this = this.as_object().unwrap();
+
+    if let Some(dobj) = this.as_display_object() {
+        return Ok(dobj.rotation_y().into());
+    }
+    Ok(Value::Undefined)
 }
 
 pub fn set_rotation_y<'gc>(
-    activation: &mut Activation<'_, 'gc>,
-    _this: Value<'gc>,
-    _args: FunctionArgs<'_, 'gc>,
+    _activation: &mut Activation<'_, 'gc>,
+    this: Value<'gc>,
+    args: FunctionArgs<'_, 'gc>,
 ) -> Result<Value<'gc>, Error<'gc>> {
-    avm2_stub_setter!(activation, "flash.display.DisplayObject", "rotationY");
+    let this = this.as_object().unwrap();
+
+    if let Some(dobj) = this.as_display_object() {
+        dobj.set_rotation_y(args.get_f64(0));
+    }
     Ok(Value::Undefined)
 }
 
@@ -442,36 +454,45 @@ pub fn get_rotation_z<'gc>(
     this: Value<'gc>,
     args: FunctionArgs<'_, 'gc>,
 ) -> Result<Value<'gc>, Error<'gc>> {
-    // TODO This probably interacts with Matrix3D.
-    avm2_stub_getter!(activation, "flash.display.DisplayObject", "rotationZ");
     get_rotation(activation, this, args)
 }
 
 pub fn set_rotation_z<'gc>(
-    activation: &mut Activation<'_, 'gc>,
+    _activation: &mut Activation<'_, 'gc>,
     this: Value<'gc>,
     args: FunctionArgs<'_, 'gc>,
 ) -> Result<Value<'gc>, Error<'gc>> {
-    // TODO This probably interacts with Matrix3D.
-    avm2_stub_setter!(activation, "flash.display.DisplayObject", "rotationZ");
-    set_rotation(activation, this, args)
+    let this = this.as_object().unwrap();
+
+    if let Some(dobj) = this.as_display_object() {
+        dobj.set_rotation_z(args.get_f64(0));
+    }
+    Ok(Value::Undefined)
 }
 
 pub fn get_scale_z<'gc>(
-    activation: &mut Activation<'_, 'gc>,
-    _this: Value<'gc>,
+    _activation: &mut Activation<'_, 'gc>,
+    this: Value<'gc>,
     _args: FunctionArgs<'_, 'gc>,
 ) -> Result<Value<'gc>, Error<'gc>> {
-    avm2_stub_getter!(activation, "flash.display.DisplayObject", "scaleZ");
-    Ok(1.into())
+    let this = this.as_object().unwrap();
+
+    if let Some(dobj) = this.as_display_object() {
+        return Ok(dobj.scale_z().into());
+    }
+    Ok(Value::Undefined)
 }
 
 pub fn set_scale_z<'gc>(
-    activation: &mut Activation<'_, 'gc>,
-    _this: Value<'gc>,
-    _args: FunctionArgs<'_, 'gc>,
+    _activation: &mut Activation<'_, 'gc>,
+    this: Value<'gc>,
+    args: FunctionArgs<'_, 'gc>,
 ) -> Result<Value<'gc>, Error<'gc>> {
-    avm2_stub_setter!(activation, "flash.display.DisplayObject", "scaleZ");
+    let this = this.as_object().unwrap();
+
+    if let Some(dobj) = this.as_display_object() {
+        dobj.set_scale_z(args.get_f64(0));
+    }
     Ok(Value::Undefined)
 }
 
@@ -485,6 +506,10 @@ pub fn get_rotation<'gc>(
 
     if let Some(dobj) = this.as_display_object() {
         let rot: f64 = dobj.rotation().into();
+        if dobj.has_matrix3d() {
+            // With a 3D transform, Flash returns the angle as it was set.
+            return Ok(rot.into());
+        }
         let rem = rot % 360.0;
 
         if rem <= 180.0 {
@@ -829,14 +854,12 @@ pub fn set_transform<'gc>(
     let transform = args.get_object(activation, 0, "transform")?;
 
     // FIXME - consider pixel bounds
-    let matrix = matrix_from_transform_object(transform);
-    let has_matrix3d = has_matrix3d_from_transform_object(transform);
     let color_transform = color_transform_from_transform_object(transform);
 
     let dobj = this.as_display_object().unwrap();
     let base = dobj.base();
-    base.set_matrix(matrix);
-    base.set_has_matrix3d_stub(has_matrix3d);
+    let source = transform_display_object(transform);
+    base.copy_matrix3d_from(&source.base());
     base.set_color_transform(color_transform);
     if let Some(parent) = dobj.parent() {
         // Self-transform changes are automatically handled,
@@ -979,10 +1002,17 @@ pub fn local_to_global<'gc>(
 
         let local = Point::from_pixels(x, y);
         let global = dobj.local_to_global(local);
-        return activation.avm2().classes().point.construct(
-            activation,
-            &[global.x.to_pixels().into(), global.y.to_pixels().into()],
-        );
+        let (mut x, mut y) = (global.x.to_pixels(), global.y.to_pixels());
+        if dobj.local_to_global_matrix3d().is_some() {
+            // Flash returns whole pixels for points projected from 3D.
+            x = x.round();
+            y = y.round();
+        }
+        return activation
+            .avm2()
+            .classes()
+            .point
+            .construct(activation, &[x.into(), y.into()]);
     }
 
     Ok(Value::Undefined)
@@ -1001,7 +1031,14 @@ pub fn global_to_local<'gc>(
         let y = point.get_slot(point_slots::Y).as_f64();
 
         let global = Point::from_pixels(x, y);
-        let local = dobj.global_to_local(global).unwrap_or(global);
+        let local = match dobj.global_to_local(global) {
+            Some(local) => local,
+            // Flash's result when a 3D object is seen edge-on.
+            None if dobj.local_to_global_matrix3d().is_some() => {
+                Point::new(Twips::new(i32::MIN), Twips::new(i32::MIN))
+            }
+            None => global,
+        };
         return activation.avm2().classes().point.construct(
             activation,
             &[local.x.to_pixels().into(), local.y.to_pixels().into()],
@@ -1023,6 +1060,13 @@ fn get_dobj_bounds<'gc>(
     let mut out_bounds = if DisplayObject::ptr_eq(dobj, target) {
         // Getting the clips bounds in its own coordinate space; no AABB transform needed.
         bounds
+    } else if dobj.local_to_global_matrix3d().is_some()
+        && target.local_to_global_matrix3d().is_none()
+    {
+        // An object seen through a 3D projection, in a 2D coordinate space:
+        // Flash uses its projected bounds, in whole stage pixels.
+        let world = crate::display_object::snap_to_pixels_outward(dobj.world_bounds(mode));
+        target.global_to_local_matrix().unwrap_or_default() * world
     } else {
         // Transform AABB to target space.
         // Calculate the matrix to transform into the target coordinate space, and transform the above AABB.
