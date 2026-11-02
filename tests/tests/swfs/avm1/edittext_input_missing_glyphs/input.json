@@ -1,0 +1,37 @@
+[
+  {
+    "type": "TextInput",
+    "codepoint": "a"
+  },
+  {
+    "type": "TextInput",
+    "codepoint": "A"
+  },
+  {
+    "type": "TextInput",
+    "codepoint": "g"
+  },
+  {
+    "type": "TextInput",
+    "codepoint": "c"
+  },
+  {
+    "type": "TextInput",
+    "codepoint": "y"
+  },
+  {
+    "type": "TextInput",
+    "codepoint": "1"
+  },
+  {
+    "type": "TextInput",
+    "codepoint": "$"
+  },
+  {
+    "type": "TextInput",
+    "codepoint": "b"
+  },
+  {
+    "type": "Wait"
+  }
+]
