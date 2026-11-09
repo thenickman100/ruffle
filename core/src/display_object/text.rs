@@ -213,13 +213,15 @@ impl<'gc> TDisplayObject<'gc> for Text<'gc> {
             let shared = self.0.shared.get();
 
             // Transform the point into the text's local space.
-            let Some(local_matrix) = self.global_to_local_matrix() else {
+            let Some((local_point, local_matrix)) =
+                self.global_to_local_for_hit_test(point, context)
+            else {
                 return false;
             };
             let Some(text_matrix) = shared.text_transform.inverse() else {
                 return false;
             };
-            point = text_matrix * local_matrix * point;
+            point = text_matrix * local_point;
 
             let mut font_id = 0;
             let mut height = Twips::ZERO;
