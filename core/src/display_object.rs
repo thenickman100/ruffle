@@ -1227,7 +1227,12 @@ pub fn render_base<'gc>(
         None
     };
 
-    let cache_info = if context.use_bitmap_cache && this.is_bitmap_cached() {
+    // Inside 3D, Flash ignores cacheAsBitmap: only use the cache for filters.
+    let in_3d = context.transform_stack.transform().matrix3d.is_some();
+    let cache_info = if context.use_bitmap_cache
+        && this.is_bitmap_cached()
+        && !(in_3d && this.filters().is_empty())
+    {
         let mut cache_info: Option<DrawCacheInfo> = None;
         let base_transform = context.transform_stack.transform();
         // Within 3D, Flash draws the object flat in its own plane (here at the stage's
