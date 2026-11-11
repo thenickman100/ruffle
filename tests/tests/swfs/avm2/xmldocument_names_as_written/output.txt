@@ -1,0 +1,18 @@
+// <svg xmlns:svg="u" xmlns="u"><g a="1"><rect/></g></svg>
+svg [xmlns, xmlns:svg]
+  g [a]
+    rect []
+// <svg xmlns="u" xmlns:svg="u"><svg:g><rect/></svg:g></svg>
+svg [xmlns, xmlns:svg]
+  svg:g []
+    rect []
+// <a:root xmlns:a="u" xmlns:b="u"><b:child/><a:child/><child/></a:root>
+a:root [xmlns:a, xmlns:b]
+  b:child []
+  a:child []
+  child []
+// <r xmlns:p="u" xmlns:q="u" p:x="1" q:y="2" z="3"/>
+r [p:x, q:y, xmlns:p, xmlns:q, z]
+// <plain><child k="v"/></plain>
+plain []
+  child [k]
