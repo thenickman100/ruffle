@@ -6,9 +6,9 @@ use crate::avm2::value::Value;
 use crate::string::AvmString;
 use ruffle_macros::istr;
 
-/// The name of an XML element or attribute as written in the source, with its
-/// prefix. Unlike `XML.namespace()`, this keeps the prefix that was used.
-pub fn _written_name<'gc>(
+/// Implements `XMLDocument._convertXmlName`: the name of an element or
+/// attribute with the prefix written in the source, like `svg:g`.
+pub fn _convert_xml_name<'gc>(
     activation: &mut Activation<'_, 'gc>,
     _this: Value<'gc>,
     args: FunctionArgs<'_, 'gc>,

@@ -49,7 +49,7 @@ package flash.xml {
         private function _convertXmlNode(original:XML):XMLNode {
             var nodeType = _convertXmlNodeType(original.nodeKind());
             var nodeValue = nodeType == XMLNodeType.ELEMENT_NODE ?
-                _writtenName(original) : original.toString();
+                _convertXmlName(original) : original.toString();
             var result = new XMLNode(nodeType, nodeValue);
             for each (var originalChild in original.children()) {
                 result.appendChild(_convertXmlNode(originalChild));
@@ -57,7 +57,7 @@ package flash.xml {
 
             var attributes = {};
             for each (var attribute in original.attributes()) {
-                attributes[_writtenName(attribute)] = attribute.toString();
+                attributes[_convertXmlName(attribute)] = attribute.toString();
             }
             for each (var ns in original.namespaceDeclarations()) {
                 var name = "xmlns";
@@ -71,8 +71,10 @@ package flash.xml {
             return result;
         }
 
-        // Like Flash, use names as written, with the prefix used in the source.
-        private native static function _writtenName(node:XML):String;
+        // Returns the name with the prefix written in the source, like Flash.
+        // `namespace().prefix` can differ: it is the first prefix declared for
+        // the namespace URI, so `<g>` in an Inkscape SVG would become `svg:g`.
+        private static native function _convertXmlName(node:XML):String;
 
         private function _convertXmlNodeType(kind:String):uint {
             if (kind == "text") {
