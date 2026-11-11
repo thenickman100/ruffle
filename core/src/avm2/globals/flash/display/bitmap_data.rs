@@ -27,6 +27,7 @@ use crate::bitmap::{is_size_valid, operations};
 use crate::character::{Character, CompressedBitmap};
 use crate::ecma_conversions::round_to_even;
 use crate::swf::BlendMode;
+use ruffle_render::bitmap::BitmapFormat;
 use ruffle_render::filters::Filter;
 use ruffle_render::transform::Transform;
 use std::str::FromStr;
@@ -75,11 +76,13 @@ pub fn fill_bitmap_data_from_symbol<'gc>(
     bd: &CompressedBitmap,
 ) -> BitmapData<'gc> {
     let bitmap = bd.decode().expect("Failed to decode BitmapData");
+    // Like Flash, bitmaps without alpha (such as JPEGs) are opaque.
+    let transparency = bitmap.format() == BitmapFormat::Rgba;
     BitmapData::new_with_pixels(
         activation.context.gc_context,
         bitmap.width(),
         bitmap.height(),
-        true,
+        transparency,
         bitmap
             .as_colors()
             .map(crate::bitmap::bitmap_data::Color::from)
