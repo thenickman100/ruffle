@@ -1827,6 +1827,7 @@ impl<'gc> EditText<'gc> {
                 self.into(),
             );
             self.propagate_text_binding(&mut activation);
+            self.run_text_changed_frame(&mut activation);
             self.on_changed(&mut activation);
         }
     }
@@ -2090,7 +2091,27 @@ impl<'gc> EditText<'gc> {
             self.into(),
         );
         self.propagate_text_binding(&mut activation);
+        self.run_text_changed_frame(&mut activation);
         self.on_changed(&mut activation);
+    }
+
+    /// Like Flash, when the user edits a text field with a variable, run the actions
+    /// of the "text_changed" frame of its parent clip, as `call("text_changed")` does.
+    fn run_text_changed_frame(self, activation: &mut Avm1Activation<'_, 'gc>) {
+        if self.object1().is_none() || self.variable().is_none() {
+            return;
+        }
+        let Some(parent) = self.parent().and_then(|p| p.as_movie_clip()) else {
+            return;
+        };
+        let Some(frame) =
+            parent.frame_label_to_number(WStr::from_units(b"text_changed"), activation.context)
+        else {
+            return;
+        };
+        for action in parent.actions_on_frame(frame) {
+            let _ = activation.run_child_frame_for_action("[Text Changed]", parent.into(), action);
+        }
     }
 
     fn initialize_listeners(self, activation: &mut Avm1Activation<'_, 'gc>) {
