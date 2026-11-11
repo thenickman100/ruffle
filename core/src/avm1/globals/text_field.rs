@@ -159,7 +159,8 @@ fn set_new_text_format<'gc>(
     if let [Value::Object(text_format), ..] = args
         && let NativeObject::TextFormat(text_format) = text_format.native()
     {
-        text_field.set_new_text_format(text_format.borrow().clone());
+        let text_format = text_format.borrow().clone();
+        text_field.set_new_text_format(text_format.with_size_limited(text_field.swf_version()));
     }
 
     Ok(Value::Undefined)
@@ -231,10 +232,11 @@ fn set_text_format<'gc>(
     if let Value::Object(text_format) = text_format
         && let NativeObject::TextFormat(text_format) = text_format.native()
     {
+        let text_format = text_format.borrow().clone();
         text_field.set_text_format(
             begin_index,
             end_index,
-            text_format.borrow().clone(),
+            text_format.with_size_limited(text_field.swf_version()),
             activation.context,
         );
     }

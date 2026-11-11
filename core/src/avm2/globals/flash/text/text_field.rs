@@ -8,7 +8,7 @@ use crate::avm2::object::{ClassObject, Object, TextFormatObject};
 use crate::avm2::parameters::ParametersExt;
 use crate::avm2::value::Value;
 use crate::avm2::{ArrayObject, ArrayStorage, Error};
-use crate::display_object::{AutoSizeMode, EditText, TextSelection};
+use crate::display_object::{AutoSizeMode, EditText, TDisplayObject, TextSelection};
 use crate::html::TextFormat;
 use crate::string::AvmString;
 use crate::{avm2_stub_getter, avm2_stub_setter};
@@ -325,7 +325,11 @@ pub fn set_default_text_format<'gc>(
     {
         let new_text_format = args.get_object(activation, 0, "format")?;
         let new_text_format = new_text_format.as_text_format().unwrap();
-        this.set_new_text_format(new_text_format.clone());
+        this.set_new_text_format(
+            new_text_format
+                .clone()
+                .with_size_limited(this.swf_version()),
+        );
     }
 
     Ok(Value::Undefined)
@@ -993,7 +997,7 @@ pub fn set_text_format<'gc>(
         this.set_text_format(
             begin_index as usize,
             end_index as usize,
-            tf.clone(),
+            tf.clone().with_size_limited(this.swf_version()),
             activation.context,
         );
     }

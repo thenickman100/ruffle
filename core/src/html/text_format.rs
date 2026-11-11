@@ -163,6 +163,15 @@ impl Default for TextFormat {
     }
 }
 
+/// Flash limits font sizes to 1-127 before SWF 13, and to at least 1 after.
+fn limit_font_size(size: f64, swf_version: u8) -> f64 {
+    if swf_version < 13 {
+        size.clamp(1.0, 127.0)
+    } else {
+        size.max(1.0)
+    }
+}
+
 impl TextFormat {
     pub fn empty() -> Self {
         Self {
@@ -264,6 +273,13 @@ impl TextFormat {
             url: Some(WString::new()),
             target: Some(WString::new()),
         }
+    }
+
+    /// Limits the font size, like Flash does when a format is applied to a
+    /// text field. `TextFormat` objects themselves keep any size.
+    pub fn with_size_limited(mut self, swf_version: u8) -> Self {
+        self.size = self.size.map(|size| limit_font_size(size, swf_version));
+        self
     }
 
     /// Given two text formats, construct a new `TextFormat` where only
@@ -910,13 +926,7 @@ impl FormatSpans {
                                         Some(b'-') => format.size.map(|last_size| last_size - size),
                                         _ => Some(size),
                                     })
-                                    .map(|size| {
-                                        if swf_version < 13 {
-                                            size.clamp(1.0, 127.0)
-                                        } else {
-                                            size.max(1.0)
-                                        }
-                                    })
+                                    .map(|size| limit_font_size(size, swf_version))
                                 {
                                     format.size = Some(size);
                                 } else {
