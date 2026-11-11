@@ -1,0 +1,7 @@
+Slot1, child added on top, 2 then 1: [10 child] -> [20 child] -> [10 child]
+Slot1, child added at index 0, 2 then 1: [child 10] -> [child 20] -> [child 10]
+Slot2, child added on top, 2 then 1: [10 30 child] -> [10 20 child] -> [10 30 child]
+Slot2, child added at index 1, 2 then 1: [10 child 30] -> [10 child 20] -> [10 child 30]
+Slot3, child added on top, 2: [child] -> [child 30]
+Slot4, child added on top, 2: [30 child] -> [10 30 child]
+Slot4, child added at index 0, 2: [child 30] -> [child 10 30]

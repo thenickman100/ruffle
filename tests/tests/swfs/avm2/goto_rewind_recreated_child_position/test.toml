@@ -1,0 +1,4 @@
+# Expected output recorded with Flash Player 32 (standalone debugger).
+# test.swf is the .as files compiled with Asc, plus timeline symbols added by a
+# script (Asc cannot make timelines). See the comment in Test.as.
+num_ticks = 1
