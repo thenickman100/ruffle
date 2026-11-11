@@ -1763,6 +1763,7 @@ impl<'gc> MovieClip<'gc> {
         }
         let hit_target_frame = self.0.current_frame() == frame;
 
+        let mut rewind_anchors: HashMap<Depth, DisplayObject<'gc>> = HashMap::new();
         if is_rewind {
             // Remove all display objects that were created after the
             // destination frame.
@@ -1782,6 +1783,24 @@ impl<'gc> MovieClip<'gc> {
                 .filter(|child| !self.survives_rewind(*child, &final_placements, frame))
                 .collect();
 
+            if self.movie().is_action_script_3() {
+                // Like Flash, an object recreated at the same depth takes the place of
+                // the removed one: below the next object that stays, which may be a
+                // child added by AS3 (those are not in the depth list).
+                let removed = |o: DisplayObject<'gc>| {
+                    !o.placed_by_avm2_script()
+                        && children.iter().any(|c| DisplayObject::ptr_eq(*c, o))
+                };
+                let render_list: SmallVec<[_; 16]> = self.iter_render_list().collect();
+                for (i, child) in render_list.iter().enumerate() {
+                    if removed(*child)
+                        && let Some(anchor) = render_list[i + 1..].iter().find(|o| !removed(**o))
+                    {
+                        rewind_anchors.insert(child.depth(), *anchor);
+                    }
+                }
+            }
+
             for child in children {
                 if !child.placed_by_avm2_script() {
                     self.remove_child(context, child);
@@ -1792,7 +1811,7 @@ impl<'gc> MovieClip<'gc> {
         }
 
         // Run the list of goto commands to actually create and update the display objects.
-        let run_goto_command = |clip: MovieClip<'gc>,
+        let run_goto_command = |mut clip: MovieClip<'gc>,
                                 context: &mut UpdateContext<'gc>,
                                 params: &GotoPlaceObject<'_>| {
             use swf::PlaceObjectAction;
@@ -1838,6 +1857,18 @@ impl<'gc> MovieClip<'gc> {
                     if let Some(child) =
                         clip.instantiate_child(context, id, params.depth(), &params.place_object)
                     {
+                        if let Some(anchor) = rewind_anchors.get(&params.depth()) {
+                            let position = |o: DisplayObject<'gc>| {
+                                clip.iter_render_list()
+                                    .position(|c| DisplayObject::ptr_eq(c, o))
+                            };
+                            if let (Some(child_pos), Some(anchor_pos)) =
+                                (position(child), position(*anchor))
+                                && child_pos > anchor_pos
+                            {
+                                clip.insert_at_index(context, child, anchor_pos);
+                            }
+                        }
                         // Set the place frame to the frame where the object *would* have been placed.
                         child.set_place_frame(params.frame);
                     }
