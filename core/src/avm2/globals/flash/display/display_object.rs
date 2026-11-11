@@ -10,6 +10,7 @@ use crate::avm2::globals::flash::geom::transform::transform_display_object;
 use crate::avm2::globals::slots::flash_display_shader as shader_slots;
 use crate::avm2::globals::slots::flash_geom_point as point_slots;
 use crate::avm2::globals::slots::flash_geom_rectangle as rectangle_slots;
+use crate::avm2::globals::slots::flash_geom_vector_3d as vector3d_slots;
 use crate::avm2::object::{Object, TObject as _};
 use crate::avm2::parameters::ParametersExt;
 use crate::avm2::value::Value;
@@ -1006,6 +1007,31 @@ pub fn local_to_global<'gc>(
             activation,
             &[global.x.to_pixels().into(), global.y.to_pixels().into()],
         );
+    }
+
+    Ok(Value::Undefined)
+}
+
+pub fn local3d_to_global<'gc>(
+    activation: &mut Activation<'_, 'gc>,
+    this: Value<'gc>,
+    args: FunctionArgs<'_, 'gc>,
+) -> Result<Value<'gc>, Error<'gc>> {
+    let this = this.as_object().unwrap();
+
+    if let Some(dobj) = this.as_display_object() {
+        let point = args.get_object(activation, 0, "point3d")?;
+        let x = point.get_slot(vector3d_slots::X).as_f64();
+        let y = point.get_slot(vector3d_slots::Y).as_f64();
+        let z = point.get_slot(vector3d_slots::Z).as_f64();
+
+        // Like Flash, objects that aren't on the stage give (0, 0).
+        let (x, y) = dobj.local_3d_to_global(x, y, z).unwrap_or((0.0, 0.0));
+        return activation
+            .avm2()
+            .classes()
+            .point
+            .construct(activation, &[x.into(), y.into()]);
     }
 
     Ok(Value::Undefined)

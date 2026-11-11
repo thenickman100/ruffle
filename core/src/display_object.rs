@@ -1974,7 +1974,13 @@ pub trait TDisplayObject<'gc>:
         if !is_3d {
             return None;
         }
+        self.projected_matrix3d_without_own_scroll_rect()
+    }
 
+    /// Like `local_to_global_matrix3d_without_own_scroll_rect`, but also for objects
+    /// only transformed in 2D. Returns `None` if this object isn't on the stage.
+    #[no_dynamic]
+    fn projected_matrix3d_without_own_scroll_rect(self) -> Option<Matrix3D> {
         let mut matrix = self.local_matrix3d();
         let mut stage = None;
         let mut node = self.parent();
@@ -2008,6 +2014,26 @@ pub trait TDisplayObject<'gc>:
             ))),
             None => matrix,
         })
+    }
+
+    /// Converts a 3D point in this object's local space to a point on the stage,
+    /// like Flash's `local3DToGlobal`. Unlike `local_to_global`, this always applies
+    /// the perspective projection, even if no object is transformed in 3D.
+    /// Returns `None` if this object isn't on the stage.
+    #[no_dynamic]
+    fn local_3d_to_global(self, x: f64, y: f64, z: f64) -> Option<(f64, f64)> {
+        let mut matrix = self.projected_matrix3d_without_own_scroll_rect()?;
+        if let Some(rect) = self.scroll_rect() {
+            matrix = matrix.multiply(&Matrix3D::from_matrix(Matrix::translate(
+                -rect.x_min,
+                -rect.y_min,
+            )));
+        }
+        // Like Flash, points behind the viewpoint are not rejected.
+        let [x, y, _, w] = matrix.transform_point(x, y, z);
+        // Flash rounds the result to a quarter of a pixel.
+        let round = |v: f64| (v * 4.0).round() / 4.0;
+        Some((round(x / w), round(y / w)))
     }
 
     /// Whether `global` falls inside this object's `scrollRect` viewport.
