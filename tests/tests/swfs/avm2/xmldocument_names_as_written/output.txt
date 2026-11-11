@@ -16,3 +16,6 @@ r [p:x, q:y, xmlns:p, xmlns:q, z]
 // <plain><child k="v"/></plain>
 plain []
   child [k]
+// <t xml:lang="en"><s xml:space="preserve"/></t>
+t [xml:lang]
+  s [xml:space]

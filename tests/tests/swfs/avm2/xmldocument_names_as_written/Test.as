@@ -12,6 +12,7 @@ package {
             show('<a:root xmlns:a="u" xmlns:b="u"><b:child/><a:child/><child/></a:root>');
             show('<r xmlns:p="u" xmlns:q="u" p:x="1" q:y="2" z="3"/>');
             show('<plain><child k="v"/></plain>');
+            show('<t xml:lang="en"><s xml:space="preserve"/></t>');
         }
 
         private function show(text:String):void {
