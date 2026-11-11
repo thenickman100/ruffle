@@ -1,0 +1,10 @@
+# Expected output recorded with Flash Player 32 (standalone debugger).
+# test.swf is built from base.swf by make_swf.py.
+num_frames = 3
+
+[[compilers]]
+type = "Asc"
+target = "base.swf"
+class = "Test"
+scripts = ["Test.as", "MyFont.as"]
+swf_version = 15

@@ -1,0 +1,3 @@
+frame 1, created in frame 1: null, null, null, hasGlyphs(a)=false
+frame 2, created in frame 1: TestFont1, regular, embedded, hasGlyphs(a)=true
+frame 2, created in frame 2: TestFont1, regular, embedded, hasGlyphs(a)=true
