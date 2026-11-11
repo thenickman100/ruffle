@@ -55,7 +55,7 @@ pub use bitmap::{Bitmap, BitmapClass};
 pub use edit_text::LayoutDebugBoxesFlag;
 pub use edit_text::{AutoSizeMode, EditText, TextSelection};
 pub use graphic::Graphic;
-pub use interactive::{Avm2MousePick, InteractiveObject, TInteractiveObject};
+pub use interactive::{Avm2MousePick, InteractiveObject, TInteractiveObject, ancestors};
 pub use loader_display::LoaderDisplay;
 pub use morph_shape::MorphShape;
 pub use movie_clip::{GotoInfo, MovieClip, MovieClipHandle, MovieClipWeak, Scene, StopOrPlay};

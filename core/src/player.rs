@@ -30,6 +30,7 @@ use crate::context_menu::{
     BuiltInItemFlags, ContextMenuCallback, ContextMenuItem, ContextMenuState,
 };
 use crate::display_object::Avm2MousePick;
+use crate::display_object::ancestors;
 use crate::display_object::{
     EditText, GotoInfo, InteractiveObject, Stage, StageAlign, StageDisplayState, StageScaleMode,
     StopOrPlay, TInteractiveObject, WindowMode,
@@ -145,9 +146,44 @@ pub struct MouseData<'gc> {
     /// while the drag is still active; this flag makes the nested call a
     /// no-op instead of recursing until stack overflow.
     pub updating_drop_target: bool,
+
+    /// The hovered object and its ancestors, as they were when it was last on the
+    /// stage. Flash uses these for roll events, even after the object is removed.
+    pub hovered_ancestors: Vec<DisplayObject<'gc>>,
+
+    /// The same for the previously hovered object, as it was when the hover changed.
+    pub previous_hovered_ancestors: Vec<DisplayObject<'gc>>,
 }
 
 impl<'gc> MouseData<'gc> {
+    /// Sets the hovered object. `ancestors` must be found before any event is
+    /// dispatched for this change, as event handlers may move or remove objects.
+    fn set_hovered(
+        &mut self,
+        hovered: Option<InteractiveObject<'gc>>,
+        ancestors: &[DisplayObject<'gc>],
+    ) {
+        if !InteractiveObject::option_ptr_eq(self.hovered, hovered) {
+            self.hovered = hovered;
+            self.previous_hovered_ancestors =
+                std::mem::replace(&mut self.hovered_ancestors, ancestors.to_vec());
+        }
+    }
+
+    /// `object` and its ancestors, for roll events. For the current and previous
+    /// hovered objects, these are the remembered ones (see `hovered_ancestors`).
+    pub fn roll_ancestors(&self, object: DisplayObject<'gc>) -> Vec<DisplayObject<'gc>> {
+        for ancestors in [&self.hovered_ancestors, &self.previous_hovered_ancestors] {
+            if ancestors
+                .first()
+                .is_some_and(|first| DisplayObject::ptr_eq(*first, object))
+            {
+                return ancestors.clone();
+            }
+        }
+        ancestors(object)
+    }
+
     pub fn pressed(&self, button: MouseButton) -> Option<InteractiveObject<'gc>> {
         match button {
             MouseButton::Unknown => None,
@@ -1509,11 +1545,24 @@ impl Player {
                 && changed_mouse_buttons.is_empty()
                 && context.mouse_data.hovered.is_some();
 
+            if let Some(hovered) = context.mouse_data.hovered {
+                let hovered = hovered.as_displayobject();
+                if hovered.is_on_stage(context) {
+                    context.mouse_data.hovered_ancestors = ancestors(hovered);
+                } else if hovered.movie().is_action_script_3() {
+                    // Like Flash, notice when the hovered object leaves the stage.
+                    skip_mouse_hover = false;
+                }
+            }
+
             let new_over_object = if mouse_in_stage {
                 run_mouse_pick(context, true)
             } else {
                 None
             };
+            // Found before any event runs, as event handlers may move objects.
+            let new_ancestors =
+                new_over_object.map_or_else(Vec::new, |o| ancestors(o.as_displayobject()));
             let mut events: smallvec::SmallVec<[(InteractiveObject<'_>, ClipEvent); 2]> =
                 Default::default();
 
@@ -1604,7 +1653,9 @@ impl Player {
                 // If the mouse button is down, the object the user clicked on grabs the focus
                 // and fires "drag" events.
                 if context.input.is_mouse_down(MouseButton::Left) {
-                    context.mouse_data.hovered = new_over_object;
+                    context
+                        .mouse_data
+                        .set_hovered(new_over_object, &new_ancestors);
                     if let Some(down_object) = context.mouse_data.pressed {
                         if InteractiveObject::option_ptr_eq(
                             context.mouse_data.pressed,
@@ -1714,7 +1765,9 @@ impl Player {
                 }
             }
             if !skip_mouse_hover && !new_over_object_updated {
-                context.mouse_data.hovered = new_over_object;
+                context
+                    .mouse_data
+                    .set_hovered(new_over_object, &new_ancestors);
             }
 
             // This needs set even when the new_over_object hasn't changed,
@@ -2961,6 +3014,8 @@ impl PlayerBuilder {
                 middle_pressed: None,
                 forced_cursor: None,
                 updating_drop_target: false,
+                hovered_ancestors: Vec::new(),
+                previous_hovered_ancestors: Vec::new(),
             },
             avm1_shared_objects: HashMap::new(),
             avm2_shared_objects: HashMap::new(),

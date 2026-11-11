@@ -29,42 +29,20 @@ use std::cell::Cell;
 use std::fmt::Debug;
 use swf::{Point, Rectangle, Twips};
 
-/// Find the lowest common ancestor between the display objects in `from` and
-/// `to`.
-///
-/// If no such common ancestor exists, this returns `None`.
-fn lowest_common_ancestor<'gc>(
-    from: DisplayObject<'gc>,
-    to: DisplayObject<'gc>,
-) -> Option<DisplayObject<'gc>> {
-    let mut from_parents = vec![];
-    let mut us = Some(from);
-    while let Some(parent) = us {
-        from_parents.push(parent);
-        us = parent.parent();
-    }
+/// `object` and its ancestors, starting with `object`.
+pub fn ancestors<'gc>(object: DisplayObject<'gc>) -> Vec<DisplayObject<'gc>> {
+    std::iter::successors(Some(object), |o| o.parent()).collect()
+}
 
-    let mut to_parents = vec![];
-    let mut them = Some(to);
-    while let Some(parent) = them {
-        to_parents.push(parent);
-        them = parent.parent();
-    }
-
-    let mut hca = None;
-    for (us_parent, them_parent) in from_parents
-        .into_iter()
-        .rev()
-        .zip(to_parents.into_iter().rev())
-    {
-        if DisplayObject::ptr_eq(us_parent, them_parent) {
-            hca = Some(us_parent);
-        } else {
-            break;
-        }
-    }
-
-    hca
+/// The objects in `from` that are not in `to`. These get the roll events when
+/// the mouse moves from the first object of `from` to the first object of `to`.
+fn roll_targets<'gc>(
+    from: Vec<DisplayObject<'gc>>,
+    to: &[DisplayObject<'gc>],
+) -> Vec<DisplayObject<'gc>> {
+    from.into_iter()
+        .take_while(|o| !to.iter().any(|t| DisplayObject::ptr_eq(*o, *t)))
+        .collect()
 }
 
 bitflags! {
@@ -407,6 +385,15 @@ pub trait TInteractiveObject<'gc>:
                 Avm2::dispatch_event(activation.context, avm2_event, target).into()
             }
             ClipEvent::RollOut { to } | ClipEvent::DragOut { to } => {
+                // Find these before `mouseOut` runs, as its handlers may move objects.
+                let mouse_data = &activation.context.mouse_data;
+                let to_object =
+                    to.map_or(activation.context.stage.into(), |t| t.as_displayobject());
+                let targets = roll_targets(
+                    mouse_data.roll_ancestors(self.as_displayobject()),
+                    &mouse_data.roll_ancestors(to_object),
+                );
+
                 let string_mouse_out = istr!("mouseOut");
 
                 let avm2_event = Avm2EventObject::mouse_event(
@@ -421,18 +408,7 @@ pub trait TInteractiveObject<'gc>:
 
                 let mut handled = Avm2::dispatch_event(activation.context, avm2_event, target);
 
-                let lca = lowest_common_ancestor(
-                    self.as_displayobject(),
-                    to.map(|t| t.as_displayobject())
-                        .unwrap_or_else(|| activation.context.stage.into()),
-                );
-
-                let mut rollout_target = Some(self.as_displayobject());
-                while let Some(tgt) = rollout_target {
-                    if DisplayObject::option_ptr_eq(rollout_target, lca) {
-                        break;
-                    }
-
+                for tgt in targets {
                     let string_roll_out = istr!("rollOut");
 
                     let avm2_event = Avm2EventObject::mouse_event(
@@ -452,26 +428,21 @@ pub trait TInteractiveObject<'gc>:
                             avm2_target.into(),
                         ) || handled;
                     }
-
-                    rollout_target = tgt.parent();
                 }
 
                 handled.into()
             }
             ClipEvent::RollOver { from } | ClipEvent::DragOver { from } => {
-                let lca = lowest_common_ancestor(
-                    self.as_displayobject(),
-                    from.map(|t| t.as_displayobject())
-                        .unwrap_or_else(|| activation.context.stage.into()),
+                let mouse_data = &activation.context.mouse_data;
+                let from_object =
+                    from.map_or(activation.context.stage.into(), |f| f.as_displayobject());
+                let targets = roll_targets(
+                    mouse_data.roll_ancestors(self.as_displayobject()),
+                    &mouse_data.roll_ancestors(from_object),
                 );
 
                 let mut handled = false;
-                let mut rollover_target = Some(self.as_displayobject());
-                while let Some(tgt) = rollover_target {
-                    if DisplayObject::option_ptr_eq(rollover_target, lca) {
-                        break;
-                    }
-
+                for tgt in targets {
                     let string_roll_over = istr!("rollOver");
 
                     let avm2_event = Avm2EventObject::mouse_event(
@@ -491,8 +462,6 @@ pub trait TInteractiveObject<'gc>:
                             avm2_target.into(),
                         ) || handled;
                     }
-
-                    rollover_target = tgt.parent();
                 }
 
                 let string_mouse_over = istr!("mouseOver");
