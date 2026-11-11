@@ -1,0 +1,3 @@
+focus: child
+after removing the container, focus: child
+stage got keyDown 65, target null

@@ -1,0 +1,6 @@
+[
+  { "type": "Wait" },
+  { "type": "Wait" },
+  { "type": "KeyDown", "key": { "Char": "a" } },
+  { "type": "KeyUp", "key": { "Char": "a" } }
+]
