@@ -1159,11 +1159,14 @@ impl Player {
                     ],
                 );
 
+                // Like Flash, a focused object that isn't on the stage (such as one
+                // whose container was removed) doesn't get key events; the stage does.
                 let target_object = activation
                     .context
                     .focus_tracker
                     .get()
                     .map(|o| o.as_displayobject())
+                    .filter(|o| o.is_on_stage(activation.context))
                     .unwrap_or_else(|| activation.context.stage.into());
 
                 if target_object.movie().is_action_script_3() {
