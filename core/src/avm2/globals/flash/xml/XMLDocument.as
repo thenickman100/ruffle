@@ -49,7 +49,7 @@ package flash.xml {
         private function _convertXmlNode(original:XML):XMLNode {
             var nodeType = _convertXmlNodeType(original.nodeKind());
             var nodeValue = nodeType == XMLNodeType.ELEMENT_NODE ?
-                _convertXmlName(original) : original.toString();
+                _writtenName(original) : original.toString();
             var result = new XMLNode(nodeType, nodeValue);
             for each (var originalChild in original.children()) {
                 result.appendChild(_convertXmlNode(originalChild));
@@ -57,7 +57,7 @@ package flash.xml {
 
             var attributes = {};
             for each (var attribute in original.attributes()) {
-                attributes[_convertXmlName(attribute)] = attribute.toString();
+                attributes[_writtenName(attribute)] = attribute.toString();
             }
             for each (var ns in original.namespaceDeclarations()) {
                 var name = "xmlns";
@@ -71,13 +71,8 @@ package flash.xml {
             return result;
         }
 
-        private function _convertXmlName(node:XML):String {
-            var ns = node.namespace();
-            if (ns.prefix) {
-            return ns.prefix + ":" + node.localName();
-            }
-            return node.localName();
-        }
+        // Like Flash, use names as written, with the prefix used in the source.
+        private native static function _writtenName(node:XML):String;
 
         private function _convertXmlNodeType(kind:String):uint {
             if (kind == "text") {
