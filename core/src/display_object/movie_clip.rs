@@ -60,6 +60,10 @@ use super::interactive::Avm2MousePick;
 
 type FrameNumber = u16;
 
+/// Like Flash Player, timelines don't play past this frame on their own.
+/// Gotos can still go further.
+const LAST_PLAYABLE_FRAME: FrameNumber = 16001;
+
 /// Indication of what frame `run_frame` should jump to next.
 #[derive(PartialEq, Eq)]
 enum NextFrame {
@@ -461,7 +465,7 @@ impl<'gc> MovieClip<'gc> {
 
             // Run my SWF tags.
             // In AVM2, SWF tags are processed at enterFrame time.
-            if self.playing() {
+            if self.playing() && self.current_frame() < LAST_PLAYABLE_FRAME {
                 self.run_frame_internal(context, true, true, false);
             }
         }
@@ -2556,7 +2560,7 @@ impl<'gc> TDisplayObject<'gc> for MovieClip<'gc> {
         if self.movie().is_action_script_3() {
             let is_playing = self.playing();
 
-            if is_playing {
+            if is_playing && self.current_frame() < LAST_PLAYABLE_FRAME {
                 self.run_frame_internal(context, true, true, true);
             }
 
