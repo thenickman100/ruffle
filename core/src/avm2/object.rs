@@ -18,6 +18,7 @@ use crate::avm2::value::{Hint, Value};
 use crate::avm2::vector::VectorStorage;
 use crate::avm2::vtable::VTable;
 use crate::bitmap::bitmap_data::BitmapData;
+use crate::context::UpdateContext;
 use crate::display_object::DisplayObject;
 use crate::html::TextFormat;
 use crate::streams::NetStream;
@@ -892,8 +893,8 @@ impl<'gc> Object<'gc> {
     }
 
     /// Unwrap this object as a font.
-    pub fn as_font(&self) -> Option<Font<'gc>> {
-        self.as_font_object().and_then(|o| o.font())
+    pub fn as_font(&self, context: &UpdateContext<'gc>) -> Option<Font<'gc>> {
+        self.as_font_object().and_then(|o| o.font(context))
     }
 
     /// Unwrap this object as a regexp.
