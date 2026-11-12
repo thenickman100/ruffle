@@ -1367,6 +1367,14 @@ fn swap_depths<'gc>(
         return Ok(Value::Undefined);
     };
 
+    // Like Flash, the clip that moves is found by name in the parent: if several
+    // clips share the name, the one with the lowest depth moves.
+    let movie_clip = movie_clip
+        .name()
+        .and_then(|name| parent.child_by_name(&name, activation.is_case_sensitive()))
+        .and_then(|o| o.as_movie_clip())
+        .unwrap_or(movie_clip);
+
     let mut depth = None;
     if let Value::Number(n) = arg {
         depth = Some(crate::ecma_conversions::f64_to_wrapping_i32(n).wrapping_add(AVM_DEPTH_BIAS));
