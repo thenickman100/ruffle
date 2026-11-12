@@ -1,0 +1,427 @@
+[
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "MouseMove",
+  "pos": [
+   40,
+   120
+  ]
+ },
+ {
+  "type": "MouseDown",
+  "pos": [
+   40,
+   120
+  ],
+  "btn": "Left"
+ },
+ {
+  "type": "MouseUp",
+  "pos": [
+   40,
+   120
+  ],
+  "btn": "Left"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "MouseMove",
+  "pos": [
+   110,
+   120
+  ]
+ },
+ {
+  "type": "MouseDown",
+  "pos": [
+   110,
+   120
+  ],
+  "btn": "Left"
+ },
+ {
+  "type": "MouseUp",
+  "pos": [
+   110,
+   120
+  ],
+  "btn": "Left"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "MouseMove",
+  "pos": [
+   180,
+   120
+  ]
+ },
+ {
+  "type": "MouseDown",
+  "pos": [
+   180,
+   120
+  ],
+  "btn": "Left"
+ },
+ {
+  "type": "MouseUp",
+  "pos": [
+   180,
+   120
+  ],
+  "btn": "Left"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "MouseMove",
+  "pos": [
+   250,
+   120
+  ]
+ },
+ {
+  "type": "MouseDown",
+  "pos": [
+   250,
+   120
+  ],
+  "btn": "Left"
+ },
+ {
+  "type": "MouseUp",
+  "pos": [
+   250,
+   120
+  ],
+  "btn": "Left"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "MouseMove",
+  "pos": [
+   320,
+   120
+  ]
+ },
+ {
+  "type": "MouseDown",
+  "pos": [
+   320,
+   120
+  ],
+  "btn": "Left"
+ },
+ {
+  "type": "MouseUp",
+  "pos": [
+   320,
+   120
+  ],
+  "btn": "Left"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "MouseMove",
+  "pos": [
+   390,
+   120
+  ]
+ },
+ {
+  "type": "MouseDown",
+  "pos": [
+   390,
+   120
+  ],
+  "btn": "Left"
+ },
+ {
+  "type": "MouseUp",
+  "pos": [
+   390,
+   120
+  ],
+  "btn": "Left"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "MouseMove",
+  "pos": [
+   460,
+   120
+  ]
+ },
+ {
+  "type": "MouseDown",
+  "pos": [
+   460,
+   120
+  ],
+  "btn": "Left"
+ },
+ {
+  "type": "MouseUp",
+  "pos": [
+   460,
+   120
+  ],
+  "btn": "Left"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "MouseMove",
+  "pos": [
+   530,
+   120
+  ]
+ },
+ {
+  "type": "MouseDown",
+  "pos": [
+   530,
+   120
+  ],
+  "btn": "Left"
+ },
+ {
+  "type": "MouseUp",
+  "pos": [
+   530,
+   120
+  ],
+  "btn": "Left"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "MouseMove",
+  "pos": [
+   40,
+   190
+  ]
+ },
+ {
+  "type": "MouseDown",
+  "pos": [
+   40,
+   190
+  ],
+  "btn": "Left"
+ },
+ {
+  "type": "MouseUp",
+  "pos": [
+   40,
+   190
+  ],
+  "btn": "Left"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "MouseMove",
+  "pos": [
+   110,
+   190
+  ]
+ },
+ {
+  "type": "MouseDown",
+  "pos": [
+   110,
+   190
+  ],
+  "btn": "Left"
+ },
+ {
+  "type": "MouseUp",
+  "pos": [
+   110,
+   190
+  ],
+  "btn": "Left"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "MouseMove",
+  "pos": [
+   180,
+   190
+  ]
+ },
+ {
+  "type": "MouseDown",
+  "pos": [
+   180,
+   190
+  ],
+  "btn": "Left"
+ },
+ {
+  "type": "MouseUp",
+  "pos": [
+   180,
+   190
+  ],
+  "btn": "Left"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "MouseMove",
+  "pos": [
+   250,
+   190
+  ]
+ },
+ {
+  "type": "MouseDown",
+  "pos": [
+   250,
+   190
+  ],
+  "btn": "Left"
+ },
+ {
+  "type": "MouseUp",
+  "pos": [
+   250,
+   190
+  ],
+  "btn": "Left"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "MouseMove",
+  "pos": [
+   300,
+   400
+  ]
+ },
+ {
+  "type": "MouseDown",
+  "pos": [
+   300,
+   400
+  ],
+  "btn": "Left"
+ },
+ {
+  "type": "MouseUp",
+  "pos": [
+   300,
+   400
+  ],
+  "btn": "Left"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ }
+]
