@@ -1,0 +1,4 @@
+# Expected output recorded with Flash Player 32 (standalone debugger).
+# test.swf is test.as compiled with Rascal, then frames 2-6 were added by a
+# script, since Rascal cannot place timeline objects with clip actions.
+num_ticks = 14
