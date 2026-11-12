@@ -223,12 +223,17 @@ pub struct MovieClipData<'gc> {
     avm2_use_hand_cursor: Cell<bool>,
 }
 
+/// Depths of objects to create, and the objects to insert them before (`None`: on top).
+type RewindPositions<'gc> = Vec<(Depth, Option<DisplayObject<'gc>>)>;
+
 #[derive(Clone, Collect)]
 #[collect(no_drop)]
 struct MovieClipDataMut<'gc> {
     container: ChildContainer<'gc>,
     frame_scripts: Vec<Option<Avm2Object<'gc>>>,
     avm1_text_field_bindings: Vec<Avm1TextFieldBinding<'gc>>,
+    /// Where the objects a rewind creates go, from `plan_rewind_positions`.
+    rewind_positions: RewindPositions<'gc>,
 }
 
 impl<'gc> MovieClipData<'gc> {
@@ -240,6 +245,7 @@ impl<'gc> MovieClipData<'gc> {
                 container: ChildContainer::new(&movie),
                 frame_scripts: Vec::new(),
                 avm1_text_field_bindings: Vec::new(),
+                rewind_positions: Vec::new(),
             }),
             shared: Lock::new(Gc::new(mc, shared)),
             tag_stream_pos: Cell::new(0),
@@ -1652,6 +1658,11 @@ impl<'gc> MovieClip<'gc> {
             self.assert_expected_tag_start();
         }
 
+        // Drop the plan of an earlier looping rewind whose frame wasn't constructed.
+        if !self.0.cell.borrow().rewind_positions.is_empty() {
+            self.set_rewind_positions(context, Vec::new());
+        }
+
         let frame_before_rewind = self.current_frame();
         self.base().set_skip_next_enter_frame(false);
 
@@ -1777,10 +1788,17 @@ impl<'gc> MovieClip<'gc> {
             let final_placements: HashMap<Depth, &GotoPlaceObject<'_>> =
                 goto_commands.iter().map(|cmd| (cmd.depth(), cmd)).collect();
 
-            let children: SmallVec<[_; 16]> = self
+            let mut children: SmallVec<[_; 16]> = self
                 .iter_render_list()
                 .filter(|child| !self.survives_rewind(*child, &final_placements, frame))
                 .collect();
+
+            if self.movie().is_action_script_3() {
+                let (positions, recreated) =
+                    self.plan_rewind_positions(&children, &final_placements);
+                children.extend(recreated);
+                self.set_rewind_positions(context, positions);
+            }
 
             for child in children {
                 if !child.placed_by_avm2_script() {
@@ -1902,7 +1920,94 @@ impl<'gc> MovieClip<'gc> {
             run_inner_goto_frame(context, &removed_frame_scripts, self);
         }
 
+        // Looping gotos only create their objects when the frame is constructed.
+        if !is_implicit {
+            self.apply_rewind_positions(context);
+        }
+
         self.assert_expected_tag_end(hit_target_frame);
+    }
+
+    /// Like Flash, plans where a rewind puts the objects it creates in an AS3 clip.
+    /// Also returns the unchanged timeline objects it must recreate.
+    ///
+    /// AS3 children have no depth, so a new object can't just go before the next one.
+    /// Flash puts the replacement of an object in its place, then expects the old
+    /// object's next sibling to be the object of the next depth: if it is, it is kept
+    /// or replaced (continuing the chain); otherwise the object of that depth is
+    /// created right there, even if an equal one exists further on.
+    fn plan_rewind_positions(
+        self,
+        removed: &[DisplayObject<'gc>],
+        final_placements: &HashMap<Depth, &GotoPlaceObject<'_>>,
+    ) -> (RewindPositions<'gc>, SmallVec<[DisplayObject<'gc>; 4]>) {
+        let children: SmallVec<[_; 16]> = self.iter_render_list().collect();
+        // AS3 children are in `removed` too, but they only leave the depth list.
+        let is_removed = |o: DisplayObject<'gc>| {
+            !o.placed_by_avm2_script() && removed.iter().any(|r| DisplayObject::ptr_eq(*r, o))
+        };
+        // The first object from `index` on that stays, to insert new objects before.
+        let kept_from = |index: usize| children[index..].iter().copied().find(|o| !is_removed(*o));
+
+        let mut depths: SmallVec<[Depth; 16]> = final_placements.keys().copied().collect();
+        depths.sort_unstable();
+
+        let mut positions = Vec::new();
+        let mut recreated = SmallVec::new();
+        // After a replacement, the index of the old object's next sibling.
+        let mut next_sibling = None;
+        for depth in depths {
+            let existing = children
+                .iter()
+                .position(|c| !c.placed_by_avm2_script() && c.depth() == depth);
+            match next_sibling {
+                Some(next) if existing != Some(next) => {
+                    positions.push((depth, kept_from(next)));
+                    recreated.extend(existing.map(|e| children[e]).filter(|o| !is_removed(*o)));
+                    next_sibling = None;
+                }
+                _ => {
+                    next_sibling = existing.filter(|&e| is_removed(children[e])).map(|e| e + 1);
+                    if let Some(next) = next_sibling {
+                        positions.push((depth, kept_from(next)));
+                    }
+                }
+            }
+        }
+        (positions, recreated)
+    }
+
+    fn set_rewind_positions(
+        self,
+        context: &mut UpdateContext<'gc>,
+        positions: RewindPositions<'gc>,
+    ) {
+        let write = unlock!(Gc::write(context.gc(), self.0), MovieClipData, cell);
+        write.borrow_mut().rewind_positions = positions;
+    }
+
+    /// Moves the objects created by the last rewind to their planned places.
+    fn apply_rewind_positions(mut self, context: &mut UpdateContext<'gc>) {
+        if self.0.cell.borrow().rewind_positions.is_empty() {
+            return;
+        }
+        let write = unlock!(Gc::write(context.gc(), self.0), MovieClipData, cell);
+        let positions = std::mem::take(&mut write.borrow_mut().rewind_positions);
+        for (depth, before) in positions {
+            let Some(child) = self.child_by_depth(depth) else {
+                continue;
+            };
+            let index = |o| {
+                self.iter_render_list()
+                    .position(|c| DisplayObject::ptr_eq(c, o))
+            };
+            if let Some(current) = index(child) {
+                let target = before.and_then(index).unwrap_or(self.num_children());
+                // `insert_at_index` counts positions without the moved child.
+                let target = if current < target { target - 1 } else { target };
+                self.insert_at_index(context, child, target);
+            }
+        }
     }
 
     fn survives_rewind(
@@ -2577,6 +2682,9 @@ impl<'gc> TDisplayObject<'gc> for MovieClip<'gc> {
                     tracing::error!("Error running queued tag: {:?}, got {}", tag.tag_type, e);
                 }
             }
+
+            // Objects placed by a looping rewind are only created now.
+            self.apply_rewind_positions(context);
         }
     }
 
