@@ -1,0 +1,6 @@
+changed: a
+changed: ab
+box frame after typing: 1
+set the variable, box frame: 1
+set field.text, box frame: 1
+replaceSel, box frame: 1

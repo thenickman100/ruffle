@@ -1,0 +1,4 @@
+# Expected output recorded with Flash Player 32 (standalone debugger).
+# test.swf is test.as compiled with Rascal, plus the clip "box" added by a
+# script (see test.as).
+num_ticks = 155
