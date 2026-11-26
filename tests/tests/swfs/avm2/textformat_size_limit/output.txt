@@ -1,0 +1,19 @@
+new TextFormat(null, 800).size: 800
+setTextFormat 0: 1
+defaultTextFormat 0: 1
+htmlText 0: 1
+setTextFormat -5: 1
+defaultTextFormat -5: 1
+htmlText -5: 7
+setTextFormat 12: 12
+defaultTextFormat 12: 12
+htmlText 12: 12
+setTextFormat 127: 127
+defaultTextFormat 127: 127
+htmlText 127: 127
+setTextFormat 128: 127
+defaultTextFormat 128: 127
+htmlText 128: 127
+setTextFormat 800: 127
+defaultTextFormat 800: 127
+htmlText 800: 127
