@@ -1,0 +1,78 @@
+focusIn btn related null
+mouseDown capture on btn, focus btn
+mouseDown bubble at stage, focus btn
+mouseUp, focus btn
+next frame: focus btn
+focusOut btn related null
+---
+mouseDown capture on btnNoTabParent, focus null
+mouseDown bubble at stage, focus null
+mouseUp, focus null
+next frame: focus null
+---
+focusIn btnRemovedOnDown related null
+mouseDown capture on btnRemovedOnDown, focus btnRemovedOnDown
+mouseDown bubble at stage, focus btnRemovedOnDown (off stage)
+mouseUp, focus btnRemovedOnDown (off stage)
+next frame: focus btnRemovedOnDown (off stage)
+---
+mouseDown capture on sprite, focus null
+mouseDown bubble at stage, focus null
+mouseUp, focus null
+next frame: focus null
+---
+focusIn spriteButtonMode related null
+mouseDown capture on spriteButtonMode, focus spriteButtonMode
+mouseDown bubble at stage, focus spriteButtonMode
+mouseUp, focus spriteButtonMode
+next frame: focus spriteButtonMode
+focusOut spriteButtonMode related null
+---
+focusIn spriteTabEnabled related null
+mouseDown capture on spriteTabEnabled, focus spriteTabEnabled
+mouseDown bubble at stage, focus spriteTabEnabled
+mouseUp, focus spriteTabEnabled
+next frame: focus spriteTabEnabled
+focusOut spriteTabEnabled related null
+---
+focusIn inputNoTabParent related null
+mouseDown capture on inputNoTabParent, focus inputNoTabParent
+mouseDown bubble at stage, focus inputNoTabParent
+mouseUp, focus inputNoTabParent
+next frame: focus inputNoTabParent
+focusOut inputNoTabParent related null
+---
+mouseDown capture on btnTabDisabled, focus null
+mouseDown bubble at stage, focus null
+mouseUp, focus null
+next frame: focus null
+---
+focusIn btnSetsFocusOnDown related null
+mouseDown capture on btnSetsFocusOnDown, focus btnSetsFocusOnDown
+focusOut btnSetsFocusOnDown related spriteTabEnabled
+focusIn spriteTabEnabled related btnSetsFocusOnDown
+mouseDown bubble at stage, focus spriteTabEnabled
+mouseUp, focus spriteTabEnabled
+next frame: focus spriteTabEnabled
+focusOut spriteTabEnabled related null
+---
+focusIn btnRemovedOnClick related null
+mouseDown capture on btnRemovedOnClick, focus btnRemovedOnClick
+mouseDown bubble at stage, focus btnRemovedOnClick
+mouseUp, focus btnRemovedOnClick
+next frame: focus btnRemovedOnClick (off stage)
+---
+mouseDown capture on spriteTabEnabledNoTabParent, focus null
+mouseDown bubble at stage, focus null
+mouseUp, focus null
+next frame: focus null
+---
+mouseDown capture on btnNoTabGrandparent, focus null
+mouseDown bubble at stage, focus null
+mouseUp, focus null
+next frame: focus null
+---
+mouseDown bubble at stage, focus null
+mouseUp, focus null
+next frame: focus null
+---
