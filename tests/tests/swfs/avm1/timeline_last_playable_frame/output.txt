@@ -1,0 +1,23 @@
+_totalframes: 16100
+playing: 15996
+playing: 15997
+playing: 15998
+playing: 15999
+playing: 16000
+playing: 16001
+playing: 16001
+playing: 16001
+playing: 16001
+playing: 16001
+after gotoAndPlay(16050): 16050
+playing: 16050
+playing: 16050
+playing: 16050
+after gotoAndStop(16099): 16099
+after nextFrame: 16100
+16000, then nextFrame: 16001
+then nextFrame: 16002
+after gotoAndStop(16100): 16100
+playing: 16100
+playing: 16100
+playing: 16100
