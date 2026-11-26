@@ -2025,6 +2025,82 @@ impl<'gc> EditText<'gc> {
         self.text().get(pos).unwrap_or(0) == '\n' as u16
     }
 
+    /// Filters typed text against the embedded font that the inserted text will use.
+    ///
+    /// Flash Player ignores typed characters that have no glyph in the embedded font.
+    /// When only the other letter case is present (e.g. the font has `G` but not `g`),
+    /// Flash inserts that character instead, both visually and in the field's text.
+    /// Fields using device fonts, or fields whose embedded font can't be found, are left alone.
+    fn filter_chars_without_glyphs(
+        self,
+        text: &WStr,
+        from: usize,
+        to: usize,
+        context: &UpdateContext<'gc>,
+    ) -> WString {
+        let font_type = self.font_type();
+        if !font_type.is_embedded() {
+            return text.to_owned();
+        }
+
+        // Mirror the format that `TextSpans::replace_text` assigns to the inserted text.
+        let format = {
+            let spans = self.0.text_spans.borrow();
+            let len = spans.text().len();
+            if from < len && to < len {
+                spans.get_text_format(to, to + 1)
+            } else {
+                spans.default_format().clone()
+            }
+        };
+        let Some(font_name) = format.font.as_ref().map(|f| f.to_utf8_lossy()) else {
+            return text.to_owned();
+        };
+        let Some(font) = context
+            .library
+            .get_embedded_font_by_name(
+                &font_name,
+                font_type,
+                format.bold.unwrap_or(false),
+                format.italic.unwrap_or(false),
+                Some(self.movie()),
+            )
+            .filter(|f| f.has_glyphs())
+        else {
+            return text.to_owned();
+        };
+
+        // The other letter case of `c`, if it maps to exactly one different character.
+        let swap_case = |c: char| {
+            let swapped: String = if c.is_lowercase() {
+                c.to_uppercase().collect()
+            } else {
+                c.to_lowercase().collect()
+            };
+            let mut chars = swapped.chars();
+            match (chars.next(), chars.next()) {
+                (Some(other), None) if other != c => Some(other),
+                _ => None,
+            }
+        };
+
+        let mut result = WString::with_capacity(text.len(), false);
+        for c in text.chars() {
+            let Ok(c) = c else {
+                // Unpaired surrogates can't have glyphs.
+                continue;
+            };
+            if font.get_glyph_for_char(c).is_some() {
+                result.push_char(c);
+            } else if let Some(other) =
+                swap_case(c).filter(|&o| font.get_glyph_for_char(o).is_some())
+            {
+                result.push_char(other);
+            }
+        }
+        result
+    }
+
     pub fn text_input(self, text: String, context: &mut UpdateContext<'gc>) {
         if !self.is_editable() || self.available_chars() == 0 {
             return;
@@ -2055,6 +2131,12 @@ impl<'gc> EditText<'gc> {
         };
 
         let filtered_text = self.0.restrict.borrow().filter_allowed(&text);
+        let filtered_text = self.filter_chars_without_glyphs(
+            &filtered_text,
+            selection.start(),
+            selection.end(),
+            context,
+        );
 
         if let Some(target) = self.object2() {
             let character_string =
