@@ -30,6 +30,17 @@ impl BufferBuilder {
         self.limit = limit;
     }
 
+    /// Like `add`, but first pads with zeros so the vertices line up.
+    /// Some WebGL drivers drop a triangle otherwise.
+    pub fn add_aligned<T: NoUninit + AnyBitPattern>(
+        &mut self,
+        value: &[T],
+    ) -> Result<Range<wgpu::BufferAddress>, BufferFull> {
+        let start_pos = self.inner.len().next_multiple_of(size_of::<T>());
+        self.inner.resize(start_pos, 0);
+        self.add(value)
+    }
+
     pub fn add<T: NoUninit + AnyBitPattern>(
         &mut self,
         value: &[T],
