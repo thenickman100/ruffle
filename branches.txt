@@ -1,0 +1,33 @@
+# Fix branches merged into each fork release, in this order.
+# Each branch is independent: it starts from upstream Ruffle and never
+# merges another fix branch. One branch per line, # for comments.
+
+# Cube Escape games (3D; includes pr/hittest-shape-as-drawn)
+pr/3d-display-objects
+# Cube Escape: Seasons (fireplace shadow)
+pr/wgpu-vertex-alignment
+# Cube Escape: The Cave, Rusty Lake (menu text)
+pr/font-class-linked-late
+# Chuzzle
+pr/chuzzle-initaction
+# Pwong
+pr/pwong-self-draw
+# Password fields with partial embedded fonts
+pr/input-missing-glyph
+# Ragdoll Achievement (hover menus)
+pr/roll-events-hovered
+# Blosics 2 (levels, title)
+pr/xmldocument-written-names
+pr/textformat-size-limit
+# Drop Dead 2 and 3
+pr/bitmap-symbol-jpeg-opaque
+# Wrath of Evil
+pr/goto-rewind-replaced-position
+# Clear Vision 2
+pr/timeline-last-playable-frame
+# Clear Vision 4
+pr/swapdepths-duplicate-names
+# Icescape
+pr/text-changed-label
+# Nimball Rewind
+pr/mouse-focus-tab-children
