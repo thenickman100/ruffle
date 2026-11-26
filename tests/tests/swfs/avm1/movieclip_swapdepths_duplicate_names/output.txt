@@ -1,0 +1,6 @@
+B.swapDepths(30): A depth 30, B depth 20
+then B.swapDepths(5): A depth 30, B depth 5
+then A.swapDepths(40): A depth 30, B depth 40
+B.swapDepths(other clip at 15): A depth 15, B depth 20
+other depth 10
+A.swapDepths(30): A depth 30, B depth 20
