@@ -24,7 +24,7 @@ pub fn get_font_name<'gc>(
 ) -> Result<Value<'gc>, Error<'gc>> {
     let this = this.as_object().unwrap();
 
-    if let Some(font) = this.as_font() {
+    if let Some(font) = this.as_font(activation.context) {
         return Ok(AvmString::new_utf8(activation.gc(), font.descriptor().name()).into());
     }
 
@@ -39,7 +39,7 @@ pub fn get_font_style<'gc>(
 ) -> Result<Value<'gc>, Error<'gc>> {
     let this = this.as_object().unwrap();
 
-    if let Some(font) = this.as_font() {
+    if let Some(font) = this.as_font(activation.context) {
         let font_style = match (font.descriptor().bold(), font.descriptor().italic()) {
             (false, false) => istr!("regular"),
             (false, true) => istr!("italic"),
@@ -61,7 +61,7 @@ pub fn get_font_type<'gc>(
 ) -> Result<Value<'gc>, Error<'gc>> {
     let this = this.as_object().unwrap();
 
-    if let Some(font) = this.as_font() {
+    if let Some(font) = this.as_font(activation.context) {
         let font_type = match font.font_type() {
             FontType::Embedded => istr!("embedded"),
             FontType::EmbeddedCFF => istr!("embeddedCFF"),
@@ -82,7 +82,7 @@ pub fn has_glyphs<'gc>(
 ) -> Result<Value<'gc>, Error<'gc>> {
     let this = this.as_object().unwrap();
 
-    if let Some(font) = this.as_font() {
+    if let Some(font) = this.as_font(activation.context) {
         let my_str = args.get_string(activation, 0);
         return Ok(font.has_glyphs_for_str(&my_str).into());
     }

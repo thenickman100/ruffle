@@ -1,7 +1,8 @@
 use crate::avm2::object::script_object::ScriptObjectData;
 use crate::avm2::object::{Object, TObject};
-use crate::avm2::{Activation, ClassObject, Error};
+use crate::avm2::{Activation, Class, ClassObject, Error};
 use crate::character::Character;
+use crate::context::UpdateContext;
 use crate::font::Font;
 use gc_arena::{Collect, Gc, GcWeak, Mutation};
 use ruffle_common::utils::HasPrefixField;
@@ -13,27 +14,22 @@ pub fn font_allocator<'gc>(
     activation: &mut Activation<'_, 'gc>,
 ) -> Result<Object<'gc>, Error<'gc>> {
     let base = ScriptObjectData::new(class);
-
-    let font = if let Some((movie, id)) = activation
-        .context
-        .library
-        .avm2_class_registry()
-        .class_symbol(class.inner_class_definition())
-    {
-        if let Some(lib) = activation.context.library.library_for_movie(movie) {
-            if let Some(Character::Font(font)) = lib.character_by_id(id) {
-                Some(font)
-            } else {
-                None
-            }
-        } else {
-            None
-        }
-    } else {
-        None
-    };
+    let font = font_for_class(class.inner_class_definition(), activation.context);
 
     Ok(FontObject(Gc::new(activation.gc(), FontObjectData { base, font })).into())
+}
+
+/// The embedded font that a `Font` subclass is linked to, if any.
+fn font_for_class<'gc>(class: Class<'gc>, context: &UpdateContext<'gc>) -> Option<Font<'gc>> {
+    let (movie, id) = context.library.avm2_class_registry().class_symbol(class)?;
+    match context
+        .library
+        .library_for_movie(movie)?
+        .character_by_id(id)
+    {
+        Some(Character::Font(font)) => Some(font),
+        _ => None,
+    }
 }
 
 #[derive(Clone, Collect, Copy)]
@@ -57,8 +53,12 @@ impl<'gc> FontObject<'gc> {
         .into()
     }
 
-    pub fn font(self) -> Option<Font<'gc>> {
-        self.0.font
+    /// The font of this object. Like Flash, this also works if the object
+    /// was created before its class was linked to a font.
+    pub fn font(self, context: &UpdateContext<'gc>) -> Option<Font<'gc>> {
+        self.0
+            .font
+            .or_else(|| font_for_class(self.instance_class(), context))
     }
 }
 
