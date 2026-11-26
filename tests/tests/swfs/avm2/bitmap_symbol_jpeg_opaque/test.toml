@@ -1,0 +1,4 @@
+# Expected output recorded with Flash Player 32 (standalone debugger).
+# test.swf is Test.as, TestJpeg.as and TestJpegData.as compiled with Asc,
+# plus a JPEG linked to those classes (Asc cannot embed images).
+num_ticks = 1
