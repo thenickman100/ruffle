@@ -92,11 +92,26 @@ echo "Built $ZIP"
 [[ $DRY == --dry-run ]] && { echo "Dry run: not tagging or publishing"; exit 0; }
 
 echo "== Publishing $NAME to $FORK"
-g "$REPO" tag -a "$NAME" -F "$OUT/branches.txt" "$MERGED"
-g "$REPO" -c push.negotiate=true push -q origin "refs/tags/$NAME"
-id=$(gh api "repos/$FORK/releases" -f tag_name="$NAME" -f name="Ruffle $NAME" \
-  -f body="$(printf 'Ruffle plus the fixes below. Web (self-hosted) build.\n\n```\n%s\n```' "$(cat "$OUT/branches.txt")")" \
-  --jq .id)
+# A branch per release keeps the merged commit on GitHub. The release
+# then creates the tag on that commit.
+g "$REPO" -c push.negotiate=true push -q origin "$MERGED:refs/heads/release/$NAME"
+echo "Pushed branch release/$NAME"
+NOTES=$OUT/release-notes.md
+printf 'Ruffle plus the fixes below. Web (self-hosted) build.\n\n```\n%s\n```\n' \
+  "$(cat "$OUT/branches.txt")" > "$NOTES"
+if ! id=$(gh api "repos/$FORK/releases" -f tag_name="$NAME" \
+    -f target_commitish="release/$NAME" -f name="Ruffle $NAME" \
+    -f body="$(cat "$NOTES")" --jq .id 2>/dev/null); then
+  cat <<MSG
+Couldn't create the GitHub Release from here. To publish it, open
+https://github.com/$FORK/releases/new and use:
+  Tag:     $NAME (create it on target release/$NAME)
+  Title:   Ruffle $NAME
+  Notes:   the contents of $NOTES
+  Attach:  $ZIP
+MSG
+  exit 0
+fi
 gh api -X POST "https://uploads.github.com/repos/$FORK/releases/$id/assets?name=$(basename "$ZIP")" \
   -H "Content-Type: application/zip" --input "$ZIP" --jq .browser_download_url
 echo "Published https://github.com/$FORK/releases/tag/$NAME"

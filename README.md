@@ -11,8 +11,9 @@ of this fork. It shares no history with Ruffle.
 | `pr/*` | One fix each. Starts from upstream and never merges another fix. |
 | `fork/tools` | `branches.txt`, `release.sh` and this README. |
 
-Releases are tags named `fork-YYYY.MM.DD`, with a GitHub Release holding
-the web (self-hosted) build.
+Each release has a branch `release/fork-YYYY.MM.DD` holding the merged
+commit, and a GitHub Release (tag `fork-YYYY.MM.DD`) on that commit with
+the web (self-hosted) build attached.
 
 ## How a release is made
 
