@@ -14,6 +14,7 @@ use ruffle_render::bitmap::{
 use ruffle_render::commands::{CommandHandler, CommandList, RenderBlendMode};
 use ruffle_render::error::Error as BitmapError;
 use ruffle_render::matrix::Matrix;
+use ruffle_render::matrix3d::Matrix3D;
 use ruffle_render::quality::StageQuality;
 use ruffle_render::shape_utils::{DistilledShape, GradientType};
 use ruffle_render::tessellator::{
@@ -1295,17 +1296,29 @@ impl CommandHandler for WebGlRenderBackend {
         // Scale the quad to the region's dimensions.
         matrix *= Matrix::scale(region.width() as f32, region.height() as f32);
 
-        let world_matrix = [
-            [matrix.a, matrix.b, 0.0, 0.0],
-            [matrix.c, matrix.d, 0.0, 0.0],
-            [0.0, 0.0, 1.0, 0.0],
-            [
-                matrix.tx.to_pixels() as f32,
-                matrix.ty.to_pixels() as f32,
-                0.0,
-                1.0,
+        let world_matrix = match transform.matrix3d {
+            // 3D objects already include the perspective projection.
+            Some(matrix3d) => bytemuck::cast(
+                matrix3d
+                    .multiply(&Matrix3D::scale(
+                        region.width() as f32,
+                        region.height() as f32,
+                        1.0,
+                    ))
+                    .raw_data,
+            ),
+            None => [
+                [matrix.a, matrix.b, 0.0, 0.0],
+                [matrix.c, matrix.d, 0.0, 0.0],
+                [0.0, 0.0, 1.0, 0.0],
+                [
+                    matrix.tx.to_pixels() as f32,
+                    matrix.ty.to_pixels() as f32,
+                    0.0,
+                    1.0,
+                ],
             ],
-        ];
+        };
 
         let mult_color = transform.color_transform.mult_rgba_normalized();
         let add_color = transform.color_transform.add_rgba_normalized();
@@ -1367,17 +1380,21 @@ impl CommandHandler for WebGlRenderBackend {
     }
 
     fn render_shape(&mut self, shape: ShapeHandle, transform: Transform) {
-        let world_matrix = [
-            [transform.matrix.a, transform.matrix.b, 0.0, 0.0],
-            [transform.matrix.c, transform.matrix.d, 0.0, 0.0],
-            [0.0, 0.0, 1.0, 0.0],
-            [
-                transform.matrix.tx.to_pixels() as f32,
-                transform.matrix.ty.to_pixels() as f32,
-                0.0,
-                1.0,
+        let world_matrix = match transform.matrix3d {
+            // 3D objects already include the perspective projection.
+            Some(matrix3d) => bytemuck::cast(matrix3d.raw_data),
+            None => [
+                [transform.matrix.a, transform.matrix.b, 0.0, 0.0],
+                [transform.matrix.c, transform.matrix.d, 0.0, 0.0],
+                [0.0, 0.0, 1.0, 0.0],
+                [
+                    transform.matrix.tx.to_pixels() as f32,
+                    transform.matrix.ty.to_pixels() as f32,
+                    0.0,
+                    1.0,
+                ],
             ],
-        ];
+        };
 
         let mult_color = transform.color_transform.mult_rgba_normalized();
         let add_color = transform.color_transform.add_rgba_normalized();

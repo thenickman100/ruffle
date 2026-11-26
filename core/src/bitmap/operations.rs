@@ -1466,6 +1466,13 @@ pub fn draw<'gc>(
     }
 
     let mut transform_stack = ruffle_render::transform::TransformStack::new();
+    // Flash projects 3D objects drawn into a bitmap like on the stage, in the
+    // coordinates of the bitmap.
+    transform_stack.set_projection(Some(
+        context
+            .stage
+            .perspective_projection_matrix(&Matrix::IDENTITY),
+    ));
     transform_stack.push(&transform);
 
     let mut cache_draws = vec![];

@@ -1,0 +1,10 @@
+# Expected output recorded with Flash Player 32 (standalone debugger),
+# clicking the same stage positions as `input.json`.
+num_frames = 40
+
+[[compilers]]
+type = "Asc"
+target = "test.swf"
+class = "Test"
+scripts = ["Test.as"]
+swf_version = 15

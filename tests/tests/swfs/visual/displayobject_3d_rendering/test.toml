@@ -1,0 +1,24 @@
+# Expected image taken with Flash Player 32 (standalone debugger).
+# Flash renders 3D objects by drawing them flat at their own scale and then texture
+# mapping the result, so their edges are softer than Ruffle's, which projects the
+# shapes directly. The outlier limits allow for this (and for antialiasing), while
+# still failing if any of the objects is placed, sized or turned differently.
+num_ticks = 1
+
+[[image_comparisons.output.checks]]
+tolerance = 128
+max_outliers = 2500
+
+[[image_comparisons.output.checks]]
+tolerance = 50
+max_outliers = 20000
+
+[player_options]
+with_renderer = { optional = false, quality = "high" }
+
+[[compilers]]
+type = "Asc"
+target = "test.swf"
+class = "Test"
+scripts = ["Test.as"]
+swf_version = 15
