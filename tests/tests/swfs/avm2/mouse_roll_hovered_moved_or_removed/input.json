@@ -1,0 +1,742 @@
+[
+ {
+  "type": "MouseMove",
+  "pos": [
+   10.0,
+   280.0
+  ]
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "MouseMove",
+  "pos": [
+   60.0,
+   40.0
+  ]
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "MouseMove",
+  "pos": [
+   70.0,
+   45.0
+  ]
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "MouseMove",
+  "pos": [
+   80.0,
+   50.0
+  ]
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "MouseMove",
+  "pos": [
+   10.0,
+   280.0
+  ]
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "MouseMove",
+  "pos": [
+   170.0,
+   40.0
+  ]
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "MouseMove",
+  "pos": [
+   180.0,
+   40.0
+  ]
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "MouseMove",
+  "pos": [
+   230.0,
+   40.0
+  ]
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "MouseMove",
+  "pos": [
+   10.0,
+   280.0
+  ]
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "MouseMove",
+  "pos": [
+   40.0,
+   140.0
+  ]
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "MouseMove",
+  "pos": [
+   50.0,
+   140.0
+  ]
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "MouseMove",
+  "pos": [
+   100.0,
+   140.0
+  ]
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "MouseMove",
+  "pos": [
+   10.0,
+   280.0
+  ]
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "MouseMove",
+  "pos": [
+   40.0,
+   240.0
+  ]
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "MouseMove",
+  "pos": [
+   50.0,
+   240.0
+  ]
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "MouseMove",
+  "pos": [
+   10.0,
+   280.0
+  ]
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "MouseMove",
+  "pos": [
+   170.0,
+   240.0
+  ]
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "MouseMove",
+  "pos": [
+   175.0,
+   245.0
+  ]
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "MouseMove",
+  "pos": [
+   180.0,
+   240.0
+  ]
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "MouseMove",
+  "pos": [
+   10.0,
+   280.0
+  ]
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ },
+ {
+  "type": "Wait"
+ }
+]
