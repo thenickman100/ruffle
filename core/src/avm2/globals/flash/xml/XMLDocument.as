@@ -71,13 +71,10 @@ package flash.xml {
             return result;
         }
 
-        private function _convertXmlName(node:XML):String {
-            var ns = node.namespace();
-            if (ns.prefix) {
-            return ns.prefix + ":" + node.localName();
-            }
-            return node.localName();
-        }
+        // Returns the name with the prefix written in the source, like Flash.
+        // `namespace().prefix` can differ: it is the first prefix declared for
+        // the namespace URI, so `<g>` in an Inkscape SVG would become `svg:g`.
+        private static native function _convertXmlName(node:XML):String;
 
         private function _convertXmlNodeType(kind:String):uint {
             if (kind == "text") {
